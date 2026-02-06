@@ -1,0 +1,96 @@
+/**
+ * Application constants
+ * Centralized constants for the application
+ */
+
+/**
+ * API Endpoints
+ */
+export const API_ENDPOINTS = {
+  // Auth endpoints
+  AUTH: {
+    LOGIN: '/api/auth/login',
+    LOGOUT: '/api/auth/logout',
+    ME: '/api/auth/me',
+    REFRESH: '/api/auth/refresh',
+  },
+  // Dataset endpoints
+  DATASETS: {
+    LIST: '/api/datasets',
+    DETAIL: (id: string) => `/api/datasets/${id}`,
+    UPLOAD: '/api/datasets/upload',
+    DELETE: (id: string) => `/api/datasets/${id}`,
+    EXPORT: (id: string, format: 'csv' | 'excel') => 
+      `/api/datasets/${id}/export?format=${format}`,
+  },
+  // Record endpoints
+  RECORDS: {
+    LIST: (datasetId: string) => `/api/datasets/${datasetId}/records`,
+    UPDATE: (datasetId: string) => `/api/datasets/${datasetId}/records/batch`,
+    DELETE: (datasetId: string, recordId: string) => 
+      `/api/datasets/${datasetId}/records/${recordId}`,
+    SEARCH: (datasetId: string) => `/api/datasets/${datasetId}/records/search`,
+  },
+} as const
+
+/**
+ * Autosave configuration
+ */
+export const AUTOSAVE = {
+  DELAY_MS: 60000, // 60 seconds
+  BATCH_SIZE: 50, // Maximum records per batch
+} as const
+
+/**
+ * Pagination defaults
+ */
+export const PAGINATION = {
+  DEFAULT_PAGE: 1,
+  DEFAULT_LIMIT: 50,
+  MAX_LIMIT: 1000,
+} as const
+
+/**
+ * HTTP Status codes
+ */
+export const HTTP_STATUS = {
+  OK: 200,
+  CREATED: 201,
+  NO_CONTENT: 204,
+  BAD_REQUEST: 400,
+  UNAUTHORIZED: 401,
+  FORBIDDEN: 403,
+  NOT_FOUND: 404,
+  UNPROCESSABLE_ENTITY: 422,
+  INTERNAL_SERVER_ERROR: 500,
+} as const
+
+/**
+ * Error messages
+ */
+export const ERROR_MESSAGES = {
+  NETWORK_ERROR: 'Network error. Please check your connection.',
+  UNAUTHORIZED: 'You are not authorized. Please login again.',
+  SESSION_EXPIRED: 'Your session has expired. Please login again.',
+  NOT_FOUND: 'Resource not found.',
+  VALIDATION_ERROR: 'Validation error. Please check your input.',
+  SERVER_ERROR: 'Server error. Please try again later.',
+  UNKNOWN_ERROR: 'An unknown error occurred.',
+  UPLOAD_FAILED: 'File upload failed. Please try again.',
+  AUTOSAVE_FAILED: 'Autosave failed. Your changes may not be saved.',
+} as const
+
+/**
+ * Schema type mappings
+ */
+export const SCHEMA_TYPES = {
+  STRING: 'string',
+  NUMBER: 'number',
+  INTEGER: 'integer',
+  FLOAT: 'float',
+  BOOLEAN: 'boolean',
+  DATE: 'date',
+  DATETIME: 'datetime',
+} as const
+
+export type SchemaType = typeof SCHEMA_TYPES[keyof typeof SCHEMA_TYPES]
