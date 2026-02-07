@@ -12,7 +12,7 @@ import { AppShell } from '../components/layout/AppShell'
  * Dashboard Page
  * Displays user's datasets with upload functionality
  */
-export function DashboardPage() {
+function DashboardPage() {
   const navigate = useNavigate()
 
   const handleUploadClick = () => {
@@ -39,3 +39,5 @@ export function DashboardPage() {
     </AppShell>
   )
 }
+
+export default DashboardPage

@@ -12,7 +12,7 @@ import { AppShell } from '../components/layout/AppShell'
  * Login Page
  * Handles user login with redirect if already authenticated
  */
-export function LoginPage() {
+function LoginPage() {
   const { isAuthenticated, isLoading } = useAuth()
   const navigate = useNavigate()
 
@@ -45,3 +45,5 @@ export function LoginPage() {
     </AppShell>
   )
 }
+
+export default LoginPage

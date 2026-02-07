@@ -15,7 +15,7 @@ import { Button } from '../components/common/Button'
  * Upload Page
  * Handles dataset upload with loading state and redirect
  */
-export function UploadPage() {
+function UploadPage() {
   const navigate = useNavigate()
   const { isUploading } = useDatasets()
   const [isProcessing, setIsProcessing] = useState(false)
@@ -68,3 +68,5 @@ export function UploadPage() {
     </AppShell>
   )
 }
+
+export default UploadPage

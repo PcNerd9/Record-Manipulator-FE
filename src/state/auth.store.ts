@@ -20,6 +20,8 @@ class AuthStore {
   }
 
   private listeners: Set<() => void> = new Set()
+  private isInitializing = false
+  private isInitialized = false
 
   /**
    * Get current state
@@ -109,6 +111,8 @@ class AuthStore {
         isLoading: false,
         error: null,
       })
+      // Reset initialization flag on logout
+      this.resetInitialization()
     }
   }
 
@@ -164,13 +168,34 @@ class AuthStore {
   /**
    * Initialize auth state
    * Check if user is already authenticated
+   * Only initializes once to prevent infinite loops
    */
   async initialize(): Promise<void> {
-    const token = apiClient.getAccessToken()
-    if (token) {
-      // Try to get user to verify token is still valid
-      await this.getUser()
+    // Prevent multiple simultaneous initializations
+    if (this.isInitializing || this.isInitialized) {
+      return
     }
+
+    this.isInitializing = true
+
+    try {
+      const token = apiClient.getAccessToken()
+      if (token) {
+        // Try to get user to verify token is still valid
+        await this.getUser()
+      }
+      this.isInitialized = true
+    } finally {
+      this.isInitializing = false
+    }
+  }
+
+  /**
+   * Reset initialization flag (useful for logout)
+   */
+  resetInitialization(): void {
+    this.isInitialized = false
+    this.isInitializing = false
   }
 }
 

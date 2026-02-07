@@ -58,6 +58,13 @@ class RecordStore {
   private currentDatasetId: string | null = null
 
   private listeners: Set<() => void> = new Set()
+  private isFetchingRecords = false
+  private lastFetchedRecordsDatasetId: string | null = null
+  private lastRecordsFetchTime: number | null = null
+  private isSearching = false
+  private lastSearchKey: string | null = null
+  private lastSearchTime: number | null = null
+  private readonly FETCH_COOLDOWN = 1000 // 1 second cooldown between fetches
 
   /**
    * Get current state
@@ -107,15 +114,38 @@ class RecordStore {
 
   /**
    * Fetch records for a dataset
+   * Prevents duplicate fetches for the same dataset/page
    */
   async fetchRecords(
     datasetId: string,
     page?: number,
-    append: boolean = false
+    append: boolean = false,
+    force: boolean = false
   ): Promise<void> {
-    this.currentDatasetId = datasetId
     const currentPage = page || this.state.pagination.page
+    const fetchKey = `${datasetId}-${currentPage}-${this.state.search.column || ''}-${this.state.search.value || ''}`
 
+    // Prevent duplicate fetches for the same dataset/page/search
+    if (!force && this.isFetchingRecords && this.lastFetchedRecordsDatasetId === fetchKey) {
+      return
+    }
+
+    // Cooldown check - prevent rapid successive fetches
+    if (!force && this.lastFetchedRecordsDatasetId === fetchKey && this.lastRecordsFetchTime) {
+      const timeSinceLastFetch = Date.now() - this.lastRecordsFetchTime
+      if (timeSinceLastFetch < this.FETCH_COOLDOWN) {
+        return
+      }
+    }
+
+    // If switching datasets, clear previous records
+    if (this.currentDatasetId !== datasetId && !append) {
+      this.clearRecords()
+    }
+
+    this.currentDatasetId = datasetId
+    this.isFetchingRecords = true
+    this.lastFetchedRecordsDatasetId = fetchKey
     this.setState({ isLoading: true, error: null })
 
     try {
@@ -157,6 +187,7 @@ class RecordStore {
         isLoading: false,
         error: null,
       })
+      this.lastRecordsFetchTime = Date.now()
     } catch (error) {
       const errorMessage =
         error && typeof error === 'object' && 'message' in error
@@ -169,6 +200,8 @@ class RecordStore {
       })
 
       throw error
+    } finally {
+      this.isFetchingRecords = false
     }
   }
 
@@ -293,13 +326,32 @@ class RecordStore {
 
   /**
    * Search records
+   * Prevents duplicate searches for the same query
    */
   async searchRecords(
     datasetId: string,
     column: string,
-    value: string
+    value: string,
+    force: boolean = false
   ): Promise<void> {
+    const searchKey = `${datasetId}-${column}-${value}`
+
+    // Prevent duplicate searches for the same query
+    if (!force && this.isSearching && this.lastSearchKey === searchKey) {
+      return
+    }
+
+    // Cooldown check - prevent rapid successive searches
+    if (!force && this.lastSearchKey === searchKey && this.lastSearchTime) {
+      const timeSinceLastSearch = Date.now() - this.lastSearchTime
+      if (timeSinceLastSearch < this.FETCH_COOLDOWN) {
+        return
+      }
+    }
+
     this.currentDatasetId = datasetId
+    this.isSearching = true
+    this.lastSearchKey = searchKey
 
     this.setState({
       isLoading: true,
@@ -334,6 +386,7 @@ class RecordStore {
         isLoading: false,
         error: null,
       })
+      this.lastSearchTime = Date.now()
     } catch (error) {
       const errorMessage =
         error && typeof error === 'object' && 'message' in error
@@ -346,6 +399,8 @@ class RecordStore {
       })
 
       throw error
+    } finally {
+      this.isSearching = false
     }
   }
 
@@ -356,6 +411,8 @@ class RecordStore {
     this.setState({
       search: { column: null, value: null },
     })
+    this.lastSearchKey = null
+    this.lastSearchTime = null
   }
 
   /**
@@ -375,6 +432,8 @@ class RecordStore {
     this.paginationEngine.reset()
     this.dirtyEngine.clearAll()
     this.currentDatasetId = null
+    this.lastFetchedRecordsDatasetId = null
+    this.lastRecordsFetchTime = null
   }
 
   /**

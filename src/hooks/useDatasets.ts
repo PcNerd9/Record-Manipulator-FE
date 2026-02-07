@@ -32,8 +32,11 @@ export function useDatasets() {
       setState(datasetStore.getState())
     })
 
-    // Fetch datasets on mount
-    datasetStore.fetchDatasets().catch(console.error)
+    // Fetch datasets on mount (only if not already loading and not already fetched)
+    const currentState = datasetStore.getState()
+    if (!currentState.isLoading && currentState.datasets.length === 0) {
+      datasetStore.fetchDatasets().catch(console.error)
+    }
 
     return unsubscribe
   }, [])
@@ -80,29 +83,35 @@ export function useDatasets() {
 export function useDataset(datasetId: string | null) {
   const { activeDataset, isLoading, error, setActiveDataset } = useDatasets()
   const [localDataset, setLocalDataset] = useState<Dataset | null>(null)
+  const [lastFetchedId, setLastFetchedId] = useState<string | null>(null)
 
   useEffect(() => {
     if (!datasetId) {
       setLocalDataset(null)
+      setLastFetchedId(null)
       return
     }
 
     // If active dataset matches, use it
     if (activeDataset?.id === datasetId) {
       setLocalDataset(activeDataset)
+      setLastFetchedId(datasetId)
       return
     }
 
-    // Otherwise, fetch it
-    setActiveDataset(datasetId)
-      .then(() => {
-        const state = datasetStore.getState()
-        if (state.activeDataset?.id === datasetId) {
-          setLocalDataset(state.activeDataset)
-        }
-      })
-      .catch(console.error)
-  }, [datasetId, activeDataset, setActiveDataset])
+    // Only fetch if we haven't already fetched this dataset or if it's different
+    if (lastFetchedId !== datasetId && !isLoading) {
+      setActiveDataset(datasetId)
+        .then(() => {
+          const state = datasetStore.getState()
+          if (state.activeDataset?.id === datasetId) {
+            setLocalDataset(state.activeDataset)
+            setLastFetchedId(datasetId)
+          }
+        })
+        .catch(console.error)
+    }
+  }, [datasetId, activeDataset?.id, setActiveDataset, isLoading, lastFetchedId])
 
   return {
     dataset: localDataset || (activeDataset?.id === datasetId ? activeDataset : null),

@@ -36,6 +36,12 @@ class DatasetStore {
   }
 
   private listeners: Set<() => void> = new Set()
+  private isFetching = false
+  private lastFetchTime: number | null = null
+  private readonly FETCH_COOLDOWN = 1000 // 1 second cooldown between fetches
+  private isFetchingDataset = false
+  private lastFetchedDatasetId: string | null = null
+  private lastDatasetFetchTime: number | null = null
 
   /**
    * Get current state
@@ -71,8 +77,23 @@ class DatasetStore {
 
   /**
    * Fetch datasets list
+   * Prevents multiple simultaneous fetches and implements cooldown
    */
-  async fetchDatasets(): Promise<void> {
+  async fetchDatasets(force = false): Promise<void> {
+    // Prevent multiple simultaneous fetches
+    if (this.isFetching) {
+      return
+    }
+
+    // Cooldown check - prevent rapid successive fetches
+    if (!force && this.lastFetchTime) {
+      const timeSinceLastFetch = Date.now() - this.lastFetchTime
+      if (timeSinceLastFetch < this.FETCH_COOLDOWN) {
+        return
+      }
+    }
+
+    this.isFetching = true
     this.setState({ isLoading: true, error: null })
 
     try {
@@ -82,6 +103,7 @@ class DatasetStore {
         isLoading: false,
         error: null,
       })
+      this.lastFetchTime = Date.now()
     } catch (error) {
       const errorMessage =
         error && typeof error === 'object' && 'message' in error
@@ -94,13 +116,36 @@ class DatasetStore {
       })
 
       throw error
+    } finally {
+      this.isFetching = false
     }
   }
 
   /**
    * Set active dataset
+   * Prevents duplicate fetches for the same dataset
    */
-  async setActiveDataset(datasetId: string): Promise<void> {
+  async setActiveDataset(datasetId: string, force = false): Promise<void> {
+    // If already fetching the same dataset, return
+    if (this.isFetchingDataset && this.lastFetchedDatasetId === datasetId && !force) {
+      return
+    }
+
+    // If the active dataset already matches, don't fetch again
+    if (!force && this.state.activeDataset?.id === datasetId) {
+      return
+    }
+
+    // Cooldown check - prevent rapid successive fetches
+    if (!force && this.lastFetchedDatasetId === datasetId && this.lastDatasetFetchTime) {
+      const timeSinceLastFetch = Date.now() - this.lastDatasetFetchTime
+      if (timeSinceLastFetch < this.FETCH_COOLDOWN) {
+        return
+      }
+    }
+
+    this.isFetchingDataset = true
+    this.lastFetchedDatasetId = datasetId
     this.setState({ isLoading: true, error: null })
 
     try {
@@ -110,6 +155,7 @@ class DatasetStore {
         isLoading: false,
         error: null,
       })
+      this.lastDatasetFetchTime = Date.now()
     } catch (error) {
       const errorMessage =
         error && typeof error === 'object' && 'message' in error
@@ -123,6 +169,8 @@ class DatasetStore {
       })
 
       throw error
+    } finally {
+      this.isFetchingDataset = false
     }
   }
 

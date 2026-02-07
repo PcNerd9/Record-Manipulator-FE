@@ -52,7 +52,11 @@ export function useRecords(datasetId: string | null) {
       return
     }
 
-    recordStore.fetchRecords(datasetId).catch(console.error)
+    // Only fetch if not already loading and datasetId actually changed
+    const currentState = recordStore.getState()
+    if (!currentState.isLoading) {
+      recordStore.fetchRecords(datasetId).catch(console.error)
+    }
   }, [datasetId])
 
   const fetchRecords = useCallback(

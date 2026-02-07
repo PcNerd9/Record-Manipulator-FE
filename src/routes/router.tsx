@@ -8,12 +8,13 @@ import { lazy, Suspense } from 'react'
 import { useState, useEffect } from 'react'
 import { authStore } from '../state/auth.store'
 import { Loader } from '../components/common/Loader'
+import { RouteErrorElement } from '../components/common/RouteErrorElement'
 
 // Lazy load pages for code splitting
-const LoginPage = lazy(() => import('../pages/LoginPage').then(m => ({ default: m.LoginPage })))
-const DashboardPage = lazy(() => import('../pages/DashboardPage').then(m => ({ default: m.DashboardPage })))
-const UploadPage = lazy(() => import('../pages/UploadPage').then(m => ({ default: m.UploadPage })))
-const DatasetPage = lazy(() => import('../pages/DatasetPage').then(m => ({ default: m.DatasetPage })))
+const LoginPage = lazy(() => import('../pages/LoginPage'))
+const DashboardPage = lazy(() => import('../pages/DashboardPage'))
+const UploadPage = lazy(() => import('../pages/UploadPage'))
+const DatasetPage = lazy(() => import('../pages/DatasetPage'))
 
 /**
  * Protected Route Component
@@ -27,8 +28,8 @@ function ProtectedRoute({ children }: { children: React.ReactNode }) {
       setAuthState(authStore.getState())
     })
 
-    // Initialize auth on mount
-    authStore.initialize().catch(console.error)
+    // Don't initialize here - let useAuth hook handle it
+    // This prevents duplicate initialization calls
 
     return unsubscribe
   }, [])
@@ -63,8 +64,8 @@ function PublicRoute({ children }: { children: React.ReactNode }) {
       setAuthState(authStore.getState())
     })
 
-    // Initialize auth on mount
-    authStore.initialize().catch(console.error)
+    // Don't initialize here - let useAuth hook handle it
+    // This prevents duplicate initialization calls
 
     return unsubscribe
   }, [])
@@ -100,6 +101,7 @@ export const router = createBrowserRouter([
         </Suspense>
       </PublicRoute>
     ),
+    errorElement: <RouteErrorElement />,
   },
   {
     path: '/dashboard',
@@ -110,6 +112,7 @@ export const router = createBrowserRouter([
         </Suspense>
       </ProtectedRoute>
     ),
+    errorElement: <RouteErrorElement />,
   },
   {
     path: '/upload',
@@ -120,6 +123,7 @@ export const router = createBrowserRouter([
         </Suspense>
       </ProtectedRoute>
     ),
+    errorElement: <RouteErrorElement />,
   },
   {
     path: '/dataset/:id',
@@ -130,6 +134,7 @@ export const router = createBrowserRouter([
         </Suspense>
       </ProtectedRoute>
     ),
+    errorElement: <RouteErrorElement />,
   },
   {
     path: '/',

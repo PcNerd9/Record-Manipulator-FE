@@ -19,7 +19,7 @@ import { exportAsCSV, exportAsExcel } from '../engines/export.engine'
  * Dataset Page
  * Displays dataset with table, search, export, and autosave
  */
-export function DatasetPage() {
+function DatasetPage() {
   const { id } = useParams<{ id: string }>()
   const datasetId = id || null
 
@@ -184,3 +184,5 @@ export function DatasetPage() {
     </AppShell>
   )
 }
+
+export default DatasetPage

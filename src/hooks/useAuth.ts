@@ -20,8 +20,8 @@ export function useAuth(): AuthState & AuthActions {
       setState(authStore.getState())
     })
 
-    // Initialize auth on mount
-    authStore.initialize().catch(console.error)
+    // Don't initialize here - App.tsx handles initialization once
+    // This prevents duplicate initialization calls
 
     return unsubscribe
   }, [])
