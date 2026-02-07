@@ -4,23 +4,21 @@
  */
 
 import { useEffect } from 'react'
-import { useNavigate } from 'react-router-dom'
 import { authStore } from '../state/auth.store'
 
 /**
  * Use session expiration hook
  * Listens for session expiration events and redirects to login
+ * Uses window.location instead of navigate to work outside Router context
  */
 export function useSessionExpiration() {
-  const navigate = useNavigate()
-
   useEffect(() => {
     const handleSessionExpired = () => {
       // Clear auth state
       authStore.logout().catch(console.error)
       
-      // Redirect to login
-      navigate('/login', { replace: true })
+      // Redirect to login using window.location (works outside Router context)
+      window.location.href = '/login'
     }
 
     window.addEventListener('session-expired', handleSessionExpired as EventListener)
@@ -28,5 +26,5 @@ export function useSessionExpiration() {
     return () => {
       window.removeEventListener('session-expired', handleSessionExpired as EventListener)
     }
-  }, [navigate])
+  }, [])
 }

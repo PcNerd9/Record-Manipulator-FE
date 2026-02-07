@@ -10,26 +10,26 @@ export const API_ENDPOINTS = {
   // Auth endpoints
   AUTH: {
     LOGIN: '/api/v1/auth/login',
-    LOGOUT: '/api/av1/uth/logout',
+    LOGOUT: '/api/v1/auth/logout',
     ME: '/api/v1/auth/me',
     REFRESH: '/api/v1/auth/refresh',
   },
   // Dataset endpoints
   DATASETS: {
-    LIST: '/api/datasets',
-    DETAIL: (id: string) => `/api/datasets/${id}`,
-    UPLOAD: '/api/datasets/upload',
-    DELETE: (id: string) => `/api/datasets/${id}`,
+    LIST: '/api/v1/datasets',
+    DETAIL: (id: string) => `/api/v1/datasets/${id}`,
+    UPLOAD: '/api/v1/datasets/upload',
+    DELETE: (id: string) => `/api/v1/datasets/${id}`,
     EXPORT: (id: string, format: 'csv' | 'excel') => 
-      `/api/datasets/${id}/export?format=${format}`,
+      `/api/v1/datasets/${id}/export?format=${format}`,
   },
   // Record endpoints
   RECORDS: {
-    LIST: (datasetId: string) => `/api/datasets/${datasetId}/records`,
-    UPDATE: (datasetId: string) => `/api/datasets/${datasetId}/records/batch`,
+    LIST: (datasetId: string) => `/api/v1/datasets/${datasetId}/records`,
+    UPDATE: (datasetId: string) => `/api/v1/datasets/${datasetId}/records/batch`,
     DELETE: (datasetId: string, recordId: string) => 
-      `/api/datasets/${datasetId}/records/${recordId}`,
-    SEARCH: (datasetId: string) => `/api/datasets/${datasetId}/records/search`,
+      `/api/v1/datasets/${datasetId}/records/${recordId}`,
+    SEARCH: (datasetId: string) => `/api/v1/datasets/${datasetId}/records/search`,
   },
 } as const
 
