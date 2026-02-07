@@ -22,6 +22,7 @@ class AuthStore {
   private listeners: Set<() => void> = new Set()
   private isInitializing = false
   private isInitialized = false
+  private isLoggingOut = false
 
   /**
    * Get current state
@@ -94,14 +95,21 @@ class AuthStore {
 
   /**
    * Logout action
+   * Prevents multiple simultaneous logout calls
    */
   async logout(): Promise<void> {
+    // Prevent multiple simultaneous logout calls
+    if (this.isLoggingOut) {
+      return
+    }
+
+    this.isLoggingOut = true
     this.setState({ isLoading: true })
 
     try {
       await logoutAPI()
     } catch (error) {
-      console.error('Logout error:', error)
+      // Don't log error - logout can fail if already logged out
     } finally {
       // Always clear state, even if API call fails
       this.setState({
@@ -113,6 +121,7 @@ class AuthStore {
       })
       // Reset initialization flag on logout
       this.resetInitialization()
+      this.isLoggingOut = false
     }
   }
 
@@ -167,7 +176,7 @@ class AuthStore {
 
   /**
    * Initialize auth state
-   * Check if user is already authenticated
+   * Check if user is already authenticated using token from localStorage
    * Only initializes once to prevent infinite loops
    */
   async initialize(): Promise<void> {
@@ -179,11 +188,62 @@ class AuthStore {
     this.isInitializing = true
 
     try {
+      // Get token from localStorage
       const token = apiClient.getAccessToken()
+      
       if (token) {
-        // Try to get user to verify token is still valid
-        await this.getUser()
+        // We have a token, verify it with /me endpoint
+        try {
+          const user = await getCurrentUser()
+          
+          if (user) {
+            // Token is valid, user is authenticated
+            this.setState({
+              user,
+              accessToken: token,
+              isAuthenticated: true,
+              isLoading: false,
+            })
+          } else {
+            // Token is invalid, clear it
+            apiClient.clearAccessToken()
+            this.setState({
+              user: null,
+              accessToken: null,
+              isAuthenticated: false,
+              isLoading: false,
+            })
+          }
+        } catch (error) {
+          // /me failed, token is invalid
+          apiClient.clearAccessToken()
+          this.setState({
+            user: null,
+            accessToken: null,
+            isAuthenticated: false,
+            isLoading: false,
+          })
+        }
+      } else {
+        // No token in localStorage, user is not authenticated
+        this.setState({
+          user: null,
+          accessToken: null,
+          isAuthenticated: false,
+          isLoading: false,
+        })
       }
+      this.isInitialized = true
+    } catch (error) {
+      // If initialization fails, assume not authenticated
+      apiClient.clearAccessToken()
+      this.setState({
+        user: null,
+        accessToken: null,
+        isAuthenticated: false,
+        isLoading: false,
+        error: null, // Don't show error on initialization failure
+      })
       this.isInitialized = true
     } finally {
       this.isInitializing = false

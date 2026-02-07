@@ -16,16 +16,42 @@ import type {
 import type { ApiResponse } from '../types/api.types'
 
 /**
+ * Raw dataset list item from API (snake_case)
+ */
+interface RawDatasetListItem {
+  id: string
+  name: string
+  created_at: string
+  updated_at: string
+}
+
+/**
  * Get list of datasets for current user
  */
 export async function getDatasets(): Promise<DatasetListItem[]> {
-  const response = await apiClient.get<ApiResponse<DatasetListResponse>>(
+  const response = await apiClient.get<ApiResponse<DatasetListResponse | { datasets: RawDatasetListItem[] }>>(
     API_ENDPOINTS.DATASETS.LIST
   )
 
   // Handle both response formats
-  if (response.data?.datasets) {
-    return response.data.datasets
+  
+  if (response.data && 'datasets' in response.data) {
+    const datasets = response.data.datasets
+    // Normalize snake_case to camelCase
+    const normalizedDataset = datasets.map(
+      (dataset: RawDatasetListItem | DatasetListItem) => {
+        // Check if it's already camelCase or needs normalization
+        if ('created_at' in dataset) {
+          return {
+            id: dataset.id,
+            name: dataset.name,
+            createdAt: dataset.created_at,
+            updatedAt: dataset.updated_at
+          }
+        }
+        return dataset as DatasetListItem
+      })
+    return normalizedDataset
   }
   if (Array.isArray(response.data)) {
     return response.data
