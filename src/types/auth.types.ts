@@ -49,7 +49,6 @@ export interface RegisterRequest {
   first_name: string
   last_name: string
   password: string
-  confirm_password: string
 }
 
 /**
@@ -72,6 +71,21 @@ export interface VerifyOTPRequest {
  * Verify OTP response
  */
 export interface VerifyOTPResponse {
+  message: string
+  success: boolean
+}
+
+/**
+ * Resend OTP request payload
+ */
+export interface ResendOTPRequest {
+  email: string
+}
+
+/**
+ * Resend OTP response
+ */
+export interface ResendOTPResponse {
   message: string
   success: boolean
 }

@@ -4,7 +4,9 @@
  */
 
 import { useState, FormEvent, useEffect, useRef } from 'react'
-import { verifyOTP } from '../../api/auth.api'
+import { verifyOTP, resendOTP } from '../../api/auth.api'
+import { getFormErrorMessage, GENERIC_ERROR_MESSAGE } from '../../utils/errorHandler'
+import { showErrorToast, showSuccessToast } from '../common/Toast'
 import { Button } from '../common/Button'
 import { Input } from '../common/Input'
 
@@ -20,6 +22,7 @@ export interface VerifyOTPFormProps {
 export function VerifyOTPForm({ email, onSuccess }: VerifyOTPFormProps) {
   const [otp, setOtp] = useState('')
   const [isLoading, setIsLoading] = useState(false)
+  const [isResending, setIsResending] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const inputRef = useRef<HTMLInputElement>(null)
 
@@ -38,21 +41,33 @@ export function VerifyOTPForm({ email, onSuccess }: VerifyOTPFormProps) {
     }
 
     setIsLoading(true)
+    setError(null)
 
     try {
       const response = await verifyOTP(email, otp)
-      if (response.success) {
+      // Check if response indicates success (either response.success or response.message contains success)
+      if (response.success || (response.message && response.message.toLowerCase().includes('success'))) {
         // OTP verified successfully
+        showSuccessToast('Email verified successfully!')
         onSuccess?.()
-      } else {
-        setError(response.message || 'OTP verification failed')
+        return
       }
-    } catch (err) {
-      const errorMessage =
-        err && typeof err === 'object' && 'message' in err
-          ? (err.message as string)
-          : 'OTP verification failed. Please try again.'
+      
+      // If response has a message but not marked as success, treat as error
+      const errorMessage = response.message || 'OTP verification failed'
       setError(errorMessage)
+      showErrorToast(errorMessage)
+    } catch (err) {
+      const errorMessage = getFormErrorMessage(err)
+      if (errorMessage) {
+        setError(errorMessage)
+      } else {
+        // 500 error - show generic message in form
+        setError(GENERIC_ERROR_MESSAGE)
+      }
+      // Also show toast for all errors
+      const toastMessage = getFormErrorMessage(err) || GENERIC_ERROR_MESSAGE
+      showErrorToast(toastMessage)
     } finally {
       setIsLoading(false)
     }
@@ -105,13 +120,25 @@ export function VerifyOTPForm({ email, onSuccess }: VerifyOTPFormProps) {
             Didn't receive the code?{' '}
             <button
               type="button"
-              onClick={() => {
-                // TODO: Implement resend OTP functionality
-                alert('Resend OTP functionality will be implemented')
+              onClick={async () => {
+                setIsResending(true)
+                setError(null)
+                try {
+                  const response = await resendOTP(email)
+                  if (response.success || response.message) {
+                    showSuccessToast(response.message || 'OTP code resent successfully!')
+                  }
+                } catch (err) {
+                  const errorMessage = getFormErrorMessage(err) || GENERIC_ERROR_MESSAGE
+                  showErrorToast(errorMessage)
+                } finally {
+                  setIsResending(false)
+                }
               }}
-              className="text-blue-600 hover:text-blue-800 font-medium"
+              disabled={isResending || isLoading}
+              className="text-blue-600 hover:text-blue-800 font-medium disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              Resend Code
+              {isResending ? 'Resending...' : 'Resend Code'}
             </button>
           </div>
         </form>

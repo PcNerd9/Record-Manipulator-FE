@@ -6,6 +6,8 @@
 import { useState, FormEvent } from 'react'
 import { Link } from 'react-router-dom'
 import { register } from '../../api/auth.api'
+import { getFormErrorMessage, GENERIC_ERROR_MESSAGE } from '../../utils/errorHandler'
+import { showErrorToast } from '../common/Toast'
 import { Button } from '../common/Button'
 import { Input } from '../common/Input'
 
@@ -68,11 +70,16 @@ export function RegisterForm({ onSuccess }: RegisterFormProps) {
       // Registration successful, redirect to verify email page
       onSuccess?.(email)
     } catch (err) {
-      const errorMessage =
-        err && typeof err === 'object' && 'message' in err
-          ? (err.message as string)
-          : 'Registration failed. Please try again.'
-      setError(errorMessage)
+      const errorMessage = getFormErrorMessage(err)
+      if (errorMessage) {
+        setError(errorMessage)
+      } else {
+        // 500 error - show generic message in form
+        setError(GENERIC_ERROR_MESSAGE)
+      }
+      // Also show toast for all errors
+      const toastMessage = getFormErrorMessage(err) || GENERIC_ERROR_MESSAGE
+      showErrorToast(toastMessage)
     } finally {
       setIsLoading(false)
     }

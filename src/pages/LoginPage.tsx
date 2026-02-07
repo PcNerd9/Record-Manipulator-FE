@@ -8,6 +8,7 @@ import { useEffect } from 'react'
 import { useAuth } from '../hooks/useAuth'
 import { LoginForm } from '../components/auth/LoginForm'
 import { AppShell } from '../components/layout/AppShell'
+import { showSuccessToast } from '../components/common/Toast'
 
 /**
  * Login Page
@@ -22,8 +23,8 @@ function LoginPage() {
   useEffect(() => {
     const message = (location.state as { message?: string })?.message
     if (message) {
-      // Show success message (you can use a toast notification here)
-      alert(message)
+      // Show success message using toast
+      showSuccessToast(message)
       // Clear the state to prevent showing message on refresh
       window.history.replaceState({}, document.title)
     }

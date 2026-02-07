@@ -14,6 +14,8 @@ import { Button } from '../components/common/Button'
 import { Loader } from '../components/common/Loader'
 import { AppShell } from '../components/layout/AppShell'
 import { exportAsCSV, exportAsExcel } from '../engines/export.engine'
+import { getErrorMessage, GENERIC_ERROR_MESSAGE } from '../utils/errorHandler'
+import { showErrorToast, showSuccessToast } from '../components/common/Toast'
 
 /**
  * Dataset Page
@@ -44,9 +46,11 @@ function DatasetPage() {
     if (!datasetId) return
     try {
       await exportAsCSV(datasetId)
+      showSuccessToast('Dataset exported successfully!')
     } catch (error) {
       console.error('Export failed:', error)
-      alert('Export failed. Please try again.')
+      const errorMessage = getErrorMessage(error, GENERIC_ERROR_MESSAGE)
+      showErrorToast(errorMessage)
     }
   }, [datasetId])
 
@@ -54,18 +58,22 @@ function DatasetPage() {
     if (!datasetId) return
     try {
       await exportAsExcel(datasetId)
+      showSuccessToast('Dataset exported successfully!')
     } catch (error) {
       console.error('Export failed:', error)
-      alert('Export failed. Please try again.')
+      const errorMessage = getErrorMessage(error, GENERIC_ERROR_MESSAGE)
+      showErrorToast(errorMessage)
     }
   }, [datasetId])
 
   const handleManualSave = useCallback(async () => {
     try {
       await forceSave()
+      showSuccessToast('Changes saved successfully!')
     } catch (error) {
       console.error('Save failed:', error)
-      alert('Save failed. Please try again.')
+      const errorMessage = getErrorMessage(error, GENERIC_ERROR_MESSAGE)
+      showErrorToast(errorMessage)
     }
   }, [forceSave])
 

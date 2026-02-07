@@ -12,6 +12,8 @@ import type {
   RegisterResponse,
   VerifyOTPRequest,
   VerifyOTPResponse,
+  ResendOTPRequest,
+  ResendOTPResponse,
   User,
 } from '../types/auth.types'
 import type { ApiResponse } from '../types/api.types'
@@ -28,7 +30,6 @@ export async function login(email: string, password: string): Promise<LoginRespo
     API_ENDPOINTS.AUTH.LOGIN,
     payload
   )
-
   // Store access token in apiClient (in-memory only)
   if (response.data?.access_token) {
     apiClient.setAccessToken(response.data.access_token)
@@ -140,6 +141,22 @@ export async function verifyOTP(email: string, otp: string): Promise<VerifyOTPRe
     API_ENDPOINTS.AUTH.VERIFY_EMAIL,
     payload,
     { skipAuth: true } // OTP verification doesn't require authentication
+  )
+
+  return response.data || response
+}
+
+/**
+ * Resend OTP to user's email
+ * Sends a new OTP code to the user's email address
+ */
+export async function resendOTP(email: string): Promise<ResendOTPResponse> {
+  const payload: ResendOTPRequest = { email }
+
+  const response = await apiClient.post<ApiResponse<ResendOTPResponse>>(
+    API_ENDPOINTS.AUTH.RESEND_OTP,
+    payload,
+    { skipAuth: true } // Resend OTP doesn't require authentication
   )
 
   return response.data || response

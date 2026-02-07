@@ -71,6 +71,8 @@ export class APIClient {
    * Normalize API errors
    */
   private normalizeError(error: unknown, status: number): ApiError {
+    error = error?.detail;
+
     if (error && typeof error === 'object' && 'message' in error) {
       return {
         status,
@@ -242,6 +244,7 @@ export class APIClient {
         headers: this.buildHeaders(options),
       })
 
+
       // Handle 401 Unauthorized - try to refresh token
       // Only attempt refresh if:
       // 1. Not a special endpoint that should skip refresh
@@ -284,9 +287,11 @@ export class APIClient {
         }
       }
 
+
       // Handle non-OK responses
       if (!response.ok) {
         const error = await response.json().catch(() => ({}))
+
         const apiError = this.normalizeError(error, response.status)
 
         // Handle session expiration (403 or if refresh failed)

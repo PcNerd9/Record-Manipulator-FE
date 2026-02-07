@@ -6,6 +6,8 @@
 import { useState, FormEvent } from 'react'
 import { Link } from 'react-router-dom'
 import { useAuth } from '../../hooks/useAuth'
+import { getFormErrorMessage, GENERIC_ERROR_MESSAGE } from '../../utils/errorHandler'
+import { showErrorToast } from '../common/Toast'
 import { Button } from '../common/Button'
 import { Input } from '../common/Input'
 
@@ -37,12 +39,16 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
       await login(email, password)
       onSuccess?.()
     } catch (err) {
-      // Error is handled by auth store
-      setLocalError(
-        err && typeof err === 'object' && 'message' in err
-          ? (err.message as string)
-          : 'Login failed'
-      )
+      const errorMessage = getFormErrorMessage(err)
+      if (errorMessage) {
+        setLocalError(errorMessage)
+      } else {
+        // 500 error - show generic message in form
+        setLocalError(GENERIC_ERROR_MESSAGE)
+      }
+      // Also show toast for all errors
+      const toastMessage = getFormErrorMessage(err) || GENERIC_ERROR_MESSAGE
+      showErrorToast(toastMessage)
     }
   }
 
@@ -63,7 +69,6 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
             onChange={(e) => setEmail(e.target.value)}
             required
             disabled={isLoading}
-            error={displayError && !localError ? displayError : undefined}
             autoComplete="email"
             autoFocus
           />
@@ -75,7 +80,6 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
             onChange={(e) => setPassword(e.target.value)}
             required
             disabled={isLoading}
-            error={localError || undefined}
             autoComplete="current-password"
           />
 

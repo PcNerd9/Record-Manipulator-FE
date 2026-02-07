@@ -8,6 +8,7 @@ import { RouterProvider } from 'react-router-dom'
 import { router } from './routes/router'
 import { ErrorBoundary } from './components/common/ErrorBoundary'
 import { SessionExpirationHandler } from './components/common/SessionExpirationHandler'
+import { ToastContainer } from './components/common/Toast'
 import { Loader } from './components/common/Loader'
 import { authStore } from './state/auth.store'
 
@@ -21,15 +22,16 @@ function App() {
     authStore.initialize().catch(console.error)
   }, [])
 
-  return (
-    <ErrorBoundary>
-      <SessionExpirationHandler>
-        <Suspense fallback={<Loader size="lg" text="Loading application..." />}>
-          <RouterProvider router={router} />
-        </Suspense>
-      </SessionExpirationHandler>
-    </ErrorBoundary>
-  )
+      return (
+        <ErrorBoundary>
+          <SessionExpirationHandler>
+            <Suspense fallback={<Loader size="lg" text="Loading application..." />}>
+              <RouterProvider router={router} />
+            </Suspense>
+            <ToastContainer />
+          </SessionExpirationHandler>
+        </ErrorBoundary>
+      )
 }
 
 export default App
