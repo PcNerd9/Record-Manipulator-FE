@@ -13,6 +13,8 @@ export const API_ENDPOINTS = {
     LOGOUT: '/api/v1/auth/logout',
     ME: '/api/v1/auth/me',
     REFRESH: '/api/v1/auth/refresh',
+    REGISTER: '/api/v1/auth/register',
+    VERIFY_EMAIL: '/api/v1/auth/verify-email',
   },
   // Dataset endpoints
   DATASETS: {

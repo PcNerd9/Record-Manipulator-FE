@@ -5,7 +5,15 @@
 
 import { apiClient } from '../lib/apiClient'
 import { API_ENDPOINTS } from '../lib/constants'
-import type { LoginRequest, LoginResponse, User } from '../types/auth.types'
+import type {
+  LoginRequest,
+  LoginResponse,
+  RegisterRequest,
+  RegisterResponse,
+  VerifyOTPRequest,
+  VerifyOTPResponse,
+  User,
+} from '../types/auth.types'
 import type { ApiResponse } from '../types/api.types'
 
 /**
@@ -90,6 +98,49 @@ export async function refreshToken(): Promise<LoginResponse> {
   if (response.data?.access_token) {
     apiClient.setAccessToken(response.data.access_token)
   }
+
+  return response.data || response
+}
+
+/**
+ * Register a new user
+ * Creates a new user account and sends OTP to email
+ */
+export async function register(
+  email: string,
+  firstName: string,
+  lastName: string,
+  password: string,
+): Promise<RegisterResponse> {
+  const payload: RegisterRequest = {
+    email,
+    first_name: firstName,
+    last_name: lastName,
+    password,
+
+  }
+
+  const response = await apiClient.post<ApiResponse<RegisterResponse>>(
+    API_ENDPOINTS.AUTH.REGISTER,
+    payload,
+    { skipAuth: true } // Registration doesn't require authentication
+  )
+
+  return response.data || response
+}
+
+/**
+ * Verify email with OTP
+ * Verifies the OTP sent to user's email after registration
+ */
+export async function verifyOTP(email: string, otp: string): Promise<VerifyOTPResponse> {
+  const payload: VerifyOTPRequest = { email, otp }
+
+  const response = await apiClient.post<ApiResponse<VerifyOTPResponse>>(
+    API_ENDPOINTS.AUTH.VERIFY_EMAIL,
+    payload,
+    { skipAuth: true } // OTP verification doesn't require authentication
+  )
 
   return response.data || response
 }

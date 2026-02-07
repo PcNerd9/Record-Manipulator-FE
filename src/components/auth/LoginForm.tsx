@@ -4,6 +4,7 @@
  */
 
 import { useState, FormEvent } from 'react'
+import { Link } from 'react-router-dom'
 import { useAuth } from '../../hooks/useAuth'
 import { Button } from '../common/Button'
 import { Input } from '../common/Input'
@@ -92,6 +93,16 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
           >
             {isLoading ? 'Logging in...' : 'Login'}
           </Button>
+
+          <div className="text-center text-sm text-gray-600 mt-4">
+            Don't have an account?{' '}
+            <Link
+              to="/register"
+              className="text-blue-600 hover:text-blue-800 font-medium"
+            >
+              Sign up
+            </Link>
+          </div>
         </form>
       </div>
     </div>

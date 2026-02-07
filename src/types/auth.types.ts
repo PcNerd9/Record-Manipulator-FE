@@ -42,6 +42,41 @@ export interface AuthState {
 }
 
 /**
+ * Registration request payload
+ */
+export interface RegisterRequest {
+  email: string
+  first_name: string
+  last_name: string
+  password: string
+  confirm_password: string
+}
+
+/**
+ * Registration response
+ */
+export interface RegisterResponse {
+  message: string
+  user?: User
+}
+
+/**
+ * Verify OTP request payload
+ */
+export interface VerifyOTPRequest {
+  email: string
+  otp: string
+}
+
+/**
+ * Verify OTP response
+ */
+export interface VerifyOTPResponse {
+  message: string
+  success: boolean
+}
+
+/**
  * Auth actions
  */
 export interface AuthActions {

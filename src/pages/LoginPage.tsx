@@ -3,7 +3,8 @@
  * Login page with redirect logic
  */
 
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useLocation } from 'react-router-dom'
+import { useEffect } from 'react'
 import { useAuth } from '../hooks/useAuth'
 import { LoginForm } from '../components/auth/LoginForm'
 import { AppShell } from '../components/layout/AppShell'
@@ -15,6 +16,18 @@ import { AppShell } from '../components/layout/AppShell'
 function LoginPage() {
   const { isAuthenticated, isLoading } = useAuth()
   const navigate = useNavigate()
+  const location = useLocation()
+
+  // Check for success message from verify email page
+  useEffect(() => {
+    const message = (location.state as { message?: string })?.message
+    if (message) {
+      // Show success message (you can use a toast notification here)
+      alert(message)
+      // Clear the state to prevent showing message on refresh
+      window.history.replaceState({}, document.title)
+    }
+  }, [location.state])
 
   const handleLoginSuccess = () => {
     navigate('/dashboard', { replace: true })

@@ -12,6 +12,8 @@ import { RouteErrorElement } from '../components/common/RouteErrorElement'
 
 // Lazy load pages for code splitting
 const LoginPage = lazy(() => import('../pages/LoginPage'))
+const RegisterPage = lazy(() => import('../pages/RegisterPage'))
+const VerifyEmailPage = lazy(() => import('../pages/VerifyEmailPage'))
 const DashboardPage = lazy(() => import('../pages/DashboardPage'))
 const UploadPage = lazy(() => import('../pages/UploadPage'))
 const DatasetPage = lazy(() => import('../pages/DatasetPage'))
@@ -98,6 +100,28 @@ export const router = createBrowserRouter([
       <PublicRoute>
         <Suspense fallback={<Loader size="lg" text="Loading..." />}>
           <LoginPage />
+        </Suspense>
+      </PublicRoute>
+    ),
+    errorElement: <RouteErrorElement />,
+  },
+  {
+    path: '/register',
+    element: (
+      <PublicRoute>
+        <Suspense fallback={<Loader size="lg" text="Loading..." />}>
+          <RegisterPage />
+        </Suspense>
+      </PublicRoute>
+    ),
+    errorElement: <RouteErrorElement />,
+  },
+  {
+    path: '/verify-email',
+    element: (
+      <PublicRoute>
+        <Suspense fallback={<Loader size="lg" text="Loading..." />}>
+          <VerifyEmailPage />
         </Suspense>
       </PublicRoute>
     ),
