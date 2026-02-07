@@ -162,13 +162,21 @@ class RecordStore {
       )
 
       // Update pagination engine
-      this.paginationEngine.setMeta(response.meta)
+      const meta = {
+        page: response.meta.page,
+        limit: response.meta.page_size,
+        total: response.meta.total,
+        totalPages: response.meta.total_page,
+        hasNext: response.meta.has_next_page,
+        hasPrev: response.meta.has_prev_page
+      }
+
+      this.paginationEngine.setMeta(meta)
 
       // Update records (append for infinite scroll, replace otherwise)
       const records = append
         ? [...this.state.records, ...response.records]
         : response.records
-
       // Mark records with dirty flag from dirty engine
       const recordsWithDirty = records.map((record) => ({
         ...record,

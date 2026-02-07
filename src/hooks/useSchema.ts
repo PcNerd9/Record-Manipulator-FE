@@ -23,7 +23,7 @@ export function useSchema(datasetId: string | null) {
   const { dataset, isLoading, error } = useDataset(datasetId)
 
   const schema = useMemo<Schema | null>(() => {
-    return dataset?.schema || null
+    return dataset?.data_schema || null
   }, [dataset])
 
   const schemaFields = useMemo<SchemaField[]>(() => {

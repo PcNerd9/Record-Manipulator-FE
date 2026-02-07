@@ -23,7 +23,7 @@ export async function getRecords(
   limit: number = PAGINATION.DEFAULT_LIMIT,
   search?: { column: string; value: string }
 ): Promise<RecordListResponse> {
-  let url = `${API_ENDPOINTS.RECORDS.LIST(datasetId)}?page=${page}&limit=${limit}`
+  let url = `${API_ENDPOINTS.RECORDS.LIST(datasetId)}?page=${page}&page_size=${limit}`
 
   // Add search parameters if provided
   if (search) {

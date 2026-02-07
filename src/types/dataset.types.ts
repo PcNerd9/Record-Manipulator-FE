@@ -17,7 +17,7 @@ export type DatasetSchema = Record<string, SchemaType>
 export interface Dataset {
   id: string
   name: string
-  schema: DatasetSchema
+  data_schema: DatasetSchema
   recordCount?: number
   createdAt: string
   updatedAt: string
