@@ -143,17 +143,16 @@ function DatasetPage() {
               </span>
             </div>
 
-            {/* Manual Save Button */}
-            {dirtyCount > 0 && (
-              <Button
-                variant="secondary"
-                size="sm"
-                onClick={handleManualSave}
-                disabled={autosaveStatus === 'saving'}
-              >
-                Save Now
-              </Button>
-            )}
+            {/* Manual Save Button - Always visible */}
+            <Button
+              variant="primary"
+              size="sm"
+              onClick={handleManualSave}
+              disabled={autosaveStatus === 'saving' || dirtyCount === 0}
+              isLoading={autosaveStatus === 'saving'}
+            >
+              {autosaveStatus === 'saving' ? 'Saving...' : 'Save Changes'}
+            </Button>
 
             {/* Export Buttons */}
             <Button

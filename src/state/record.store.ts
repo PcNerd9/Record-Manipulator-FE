@@ -5,6 +5,7 @@
 
 import {
   getRecords as getRecordsAPI,
+  createRecord as createRecordAPI,
   updateRecords as updateRecordsAPI,
   deleteRecord as deleteRecordAPI,
   searchRecords as searchRecordsAPI,
@@ -115,6 +116,7 @@ class RecordStore {
   /**
    * Fetch records for a dataset
    * Prevents duplicate fetches for the same dataset/page
+   * Don't fetch if there's an active search - search handles its own fetching
    */
   async fetchRecords(
     datasetId: string,
@@ -122,6 +124,12 @@ class RecordStore {
     append: boolean = false,
     force: boolean = false
   ): Promise<void> {
+    // Don't fetch if there's an active search (unless forced)
+    // This prevents fetchRecords from overriding search results
+    if (!force && (this.state.search.column || this.state.search.value)) {
+      return
+    }
+
     const currentPage = page || this.state.pagination.page
     const fetchKey = `${datasetId}-${currentPage}-${this.state.search.column || ''}-${this.state.search.value || ''}`
 
@@ -162,13 +170,18 @@ class RecordStore {
       )
 
       // Update pagination engine
+      // Handle both response formats (snake_case and camelCase)
       const meta = {
         page: response.meta.page,
-        limit: response.meta.page_size,
+        limit: (response.meta as any).page_size || response.meta.limit,
         total: response.meta.total,
-        totalPages: response.meta.total_page,
-        hasNext: response.meta.has_next_page,
-        hasPrev: response.meta.has_prev_page
+        totalPages: (response.meta as any).total_page || response.meta.totalPages,
+        hasNext: (response.meta as any).has_next_page !== undefined 
+          ? (response.meta as any).has_next_page 
+          : response.meta.hasNext,
+        hasPrev: (response.meta as any).has_prev_page !== undefined
+          ? (response.meta as any).has_prev_page
+          : response.meta.hasPrev
       }
 
       this.paginationEngine.setMeta(meta)
@@ -210,6 +223,54 @@ class RecordStore {
       throw error
     } finally {
       this.isFetchingRecords = false
+    }
+  }
+
+  /**
+   * Create a new record
+   */
+  async createRecord(datasetId: string, data: Record<string, unknown>): Promise<DatasetRecord> {
+    if (!datasetId) {
+      throw new Error('No dataset ID provided')
+    }
+
+    this.setState({ isLoading: true, error: null })
+
+    try {
+      const newRecord = await createRecordAPI(datasetId, data)
+
+      // Add to local state at the beginning
+      const records = [
+        { ...newRecord, dirty: false },
+        ...this.state.records,
+      ]
+
+      // Update total count
+      const total = this.state.pagination.total + 1
+
+      this.setState({
+        records,
+        pagination: {
+          ...this.state.pagination,
+          total,
+        },
+        isLoading: false,
+        error: null,
+      })
+
+      return newRecord
+    } catch (error) {
+      const errorMessage =
+        error && typeof error === 'object' && 'message' in error
+          ? (error.message as string)
+          : 'Failed to create record'
+
+      this.setState({
+        isLoading: false,
+        error: errorMessage,
+      })
+
+      throw error
     }
   }
 
@@ -382,14 +443,18 @@ class RecordStore {
         dirty: this.dirtyEngine.isDirty(record.id),
       }))
 
+      // Handle both response formats (snake_case and camelCase)
+      const paginationMeta = response.meta as any
       this.setState({
         records: recordsWithDirty,
         pagination: {
           page: response.meta.page,
-          limit: response.meta.limit,
+          limit: paginationMeta.page_size || response.meta.limit,
           total: response.meta.total,
-          totalPages: response.meta.totalPages,
-          hasMore: response.meta.hasNext,
+          totalPages: paginationMeta.total_page || response.meta.totalPages,
+          hasMore: paginationMeta.has_next_page !== undefined 
+            ? paginationMeta.has_next_page 
+            : response.meta.hasNext,
         },
         isLoading: false,
         error: null,
@@ -413,14 +478,19 @@ class RecordStore {
   }
 
   /**
-   * Clear search
+   * Clear search and refetch all records
    */
-  clearSearch(): void {
+  async clearSearch(): Promise<void> {
     this.setState({
       search: { column: null, value: null },
     })
     this.lastSearchKey = null
     this.lastSearchTime = null
+    
+    // Refetch all records when clearing search
+    if (this.currentDatasetId) {
+      await this.fetchRecords(this.currentDatasetId, 1, false, true)
+    }
   }
 
   /**

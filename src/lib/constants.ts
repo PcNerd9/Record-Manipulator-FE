@@ -26,10 +26,11 @@ export const API_ENDPOINTS = {
   // Record endpoints
   RECORDS: {
     LIST: (datasetId: string) => `/api/v1/datasets/${datasetId}/records`,
+    CREATE: (datasetId: string) => `/api/v1/datasets/${datasetId}/records`,
     UPDATE: (datasetId: string) => `/api/v1/datasets/${datasetId}/records/batch`,
     DELETE: (datasetId: string, recordId: string) => 
       `/api/v1/datasets/${datasetId}/records/${recordId}`,
-    SEARCH: (datasetId: string) => `/api/v1/datasets/${datasetId}/records/search`,
+    SEARCH: (datasetId: string) => `/api/v1/datasets/${datasetId}/records/filter`,
   },
 } as const
 

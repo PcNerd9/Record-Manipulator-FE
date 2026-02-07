@@ -46,6 +46,7 @@ export function useRecords(datasetId: string | null) {
   }, [])
 
   // Fetch records when datasetId changes
+  // Don't fetch if there's an active search - let search handle it
   useEffect(() => {
     if (!datasetId) {
       recordStore.clearRecords()
@@ -53,8 +54,15 @@ export function useRecords(datasetId: string | null) {
     }
 
     // Only fetch if not already loading and datasetId actually changed
+    // Don't fetch if there's an active search - search will handle fetching
+    // Also check if records are already loaded to prevent unnecessary fetches
     const currentState = recordStore.getState()
-    if (!currentState.isLoading) {
+    const hasActiveSearch = currentState.search.column || currentState.search.value
+    const hasRecords = currentState.records.length > 0
+    
+    // Only fetch on initial load (no records and no search)
+    // This prevents fetchRecords from overriding search results
+    if (!currentState.isLoading && !hasActiveSearch && !hasRecords) {
       recordStore.fetchRecords(datasetId).catch(console.error)
     }
   }, [datasetId])
@@ -63,6 +71,14 @@ export function useRecords(datasetId: string | null) {
     (page?: number, append: boolean = false) => {
       if (!datasetId) return Promise.resolve()
       return recordStore.fetchRecords(datasetId, page, append)
+    },
+    [datasetId]
+  )
+
+  const createRecord = useCallback(
+    (data: Record<string, unknown>) => {
+      if (!datasetId) return Promise.resolve({} as DatasetRecord)
+      return recordStore.createRecord(datasetId, data)
     },
     [datasetId]
   )
@@ -90,9 +106,10 @@ export function useRecords(datasetId: string | null) {
     [datasetId]
   )
 
-  const clearSearch = useCallback(() => {
-    recordStore.clearSearch()
-  }, [])
+  const clearSearch = useCallback(async () => {
+    if (!datasetId) return
+    await recordStore.clearSearch()
+  }, [datasetId])
 
   const clearError = useCallback(() => {
     recordStore.clearError()
@@ -111,6 +128,7 @@ export function useRecords(datasetId: string | null) {
   return {
     ...state,
     fetchRecords,
+    createRecord,
     updateRecord,
     deleteRecord,
     searchRecords,

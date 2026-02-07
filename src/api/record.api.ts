@@ -11,6 +11,7 @@ import type {
   BatchUpdateRequest,
   SearchRecordsRequest,
   DeleteRecordResponse,
+  DatasetRecord,
 } from '../types/record.types'
 import type { ApiResponse } from '../types/api.types'
 
@@ -75,6 +76,21 @@ export async function updateRecords(
 }
 
 /**
+ * Create a new record
+ */
+export async function createRecord(
+  datasetId: string,
+  data: Record<string, unknown>
+): Promise<DatasetRecord> {
+  const response = await apiClient.post<ApiResponse<DatasetRecord>>(
+    API_ENDPOINTS.RECORDS.CREATE(datasetId),
+    { data }
+  )
+
+  return response.data || response
+}
+
+/**
  * Delete a single record
  */
 export async function deleteRecord(
@@ -98,10 +114,8 @@ export async function searchRecords(
 ): Promise<RecordListResponse> {
   const payload: SearchRecordsRequest = { column, value }
 
-  const response = await apiClient.post<ApiResponse<RecordListResponse>>(
-    API_ENDPOINTS.RECORDS.SEARCH(datasetId),
-    payload
-  )
+  let url = `${API_ENDPOINTS.RECORDS.SEARCH(datasetId)}?key=${payload.column}&value=${payload.value}`
+  const response = await apiClient.get<ApiResponse<RecordListResponse>>(url )
 
   // Normalize response format
   if (response.data) {
