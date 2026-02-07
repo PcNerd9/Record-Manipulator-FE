@@ -9,10 +9,10 @@
 export const API_ENDPOINTS = {
   // Auth endpoints
   AUTH: {
-    LOGIN: '/api/auth/login',
-    LOGOUT: '/api/auth/logout',
-    ME: '/api/auth/me',
-    REFRESH: '/api/auth/refresh',
+    LOGIN: '/api/v1/auth/login',
+    LOGOUT: '/api/av1/uth/logout',
+    ME: '/api/v1/auth/me',
+    REFRESH: '/api/v1/auth/refresh',
   },
   // Dataset endpoints
   DATASETS: {

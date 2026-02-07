@@ -1,15 +1,28 @@
+/**
+ * App Component
+ * Main application component with routing
+ */
+
+import { Suspense } from 'react'
+import { RouterProvider } from 'react-router-dom'
+import { router } from './routes/router'
+import { ErrorBoundary } from './components/common/ErrorBoundary'
+import { SessionExpirationHandler } from './components/common/SessionExpirationHandler'
+import { Loader } from './components/common/Loader'
+
+/**
+ * App
+ * Root component with router and error boundary
+ */
 function App() {
   return (
-    <div className="min-h-screen bg-gray-50">
-      <div className="container mx-auto px-4 py-8">
-        <h1 className="text-3xl font-bold text-gray-900 mb-4">
-          Dataset Manipulator Platform
-        </h1>
-        <p className="text-gray-600">
-          React + TypeScript + Vite + Tailwind CSS setup complete!
-        </p>
-      </div>
-    </div>
+    <ErrorBoundary>
+      <SessionExpirationHandler>
+        <Suspense fallback={<Loader size="lg" text="Loading application..." />}>
+          <RouterProvider router={router} />
+        </Suspense>
+      </SessionExpirationHandler>
+    </ErrorBoundary>
   )
 }
 
