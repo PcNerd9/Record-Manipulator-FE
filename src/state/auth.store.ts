@@ -15,7 +15,8 @@ class AuthStore {
     user: null,
     accessToken: null,
     isAuthenticated: false,
-    isLoading: false,
+    // Start in loading state so route guards wait for initialize().
+    isLoading: true,
     error: null,
   }
 
@@ -186,6 +187,7 @@ class AuthStore {
     }
 
     this.isInitializing = true
+    this.setState({ isLoading: true, error: null })
 
     try {
       // Get token from localStorage

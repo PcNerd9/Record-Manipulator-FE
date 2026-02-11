@@ -6,6 +6,7 @@
 import { memo, useState, useCallback } from 'react'
 import { useRecords } from '../../hooks/useRecords'
 import { useSchema } from '../../hooks/useSchema'
+import { useInfiniteScrollWindow } from '../../hooks/useInfiniteScroll'
 import { TableHeader } from './TableHeader'
 import { TableRow } from './TableRow'
 import { Loader } from '../common/Loader'
@@ -21,7 +22,7 @@ export interface DataTableProps {
  * Renders table with schema-driven columns and editable rows
  */
 export const DataTable = memo(function DataTable({ datasetId }: DataTableProps) {
-  const { records, createRecord, updateRecord, deleteRecord, isLoading, isUpdating } =
+  const { records, pagination, search, fetchRecords, createRecord, updateRecord, deleteRecord, isLoading, isUpdating } =
     useRecords(datasetId)
   const { schemaFields, isLoading: isSchemaLoading, schema } = useSchema(datasetId)
   const [newRecordId, setNewRecordId] = useState<string | null>(null)
@@ -60,8 +61,33 @@ export const DataTable = memo(function DataTable({ datasetId }: DataTableProps) 
     }
   }, [datasetId, schema, schemaFields, createRecord])
 
+  const handleLoadMore = useCallback(async () => {
+    // Don't paginate while searching, when already loading, or when there's no next page.
+    if (!datasetId || isLoading || isUpdating) return
+    if (search.column || search.value) return
+    if (!pagination.hasMore) return
+
+    const nextPage = pagination.page + 1
+    await fetchRecords(nextPage, true)
+  }, [
+    datasetId,
+    isLoading,
+    isUpdating,
+    search.column,
+    search.value,
+    pagination.hasMore,
+    pagination.page,
+    fetchRecords,
+  ])
+
+  useInfiniteScrollWindow({
+    onLoadMore: handleLoadMore,
+    enabled: !!datasetId && !isSchemaLoading && records.length > 0 && pagination.hasMore,
+    threshold: 250,
+  })
+
   // Early returns after all hooks
-  if (isSchemaLoading || isLoading) {
+  if (isSchemaLoading || (isLoading && records.length === 0)) {
     return <Loader size="lg" text="Loading records..." />
   }
 
@@ -121,22 +147,29 @@ export const DataTable = memo(function DataTable({ datasetId }: DataTableProps) 
           <p className="text-gray-500">No records found</p>
         </div>
       ) : (
-        <div className="overflow-x-auto">
-          <table className="min-w-full divide-y divide-gray-200 border border-gray-200 rounded-lg">
-            <TableHeader fields={schemaFields} />
-            <tbody className="bg-white divide-y divide-gray-200">
-              {displayRecords.map((record) => (
-                <TableRow
-                  key={record.id}
-                  record={record}
-                  fields={schemaFields}
-                  onUpdate={updateRecord}
-                  onDelete={deleteRecord}
-                  isDeleting={isUpdating}
-                />
-              ))}
-            </tbody>
-          </table>
+        <div className="space-y-3">
+          <div className="overflow-x-auto">
+            <table className="min-w-full divide-y divide-gray-200 border border-gray-200 rounded-lg">
+              <TableHeader fields={schemaFields} />
+              <tbody className="bg-white divide-y divide-gray-200">
+                {displayRecords.map((record) => (
+                  <TableRow
+                    key={record.id}
+                    record={record}
+                    fields={schemaFields}
+                    onUpdate={updateRecord}
+                    onDelete={deleteRecord}
+                    isDeleting={isUpdating}
+                  />
+                ))}
+              </tbody>
+            </table>
+          </div>
+          {isLoading && pagination.page > 1 && (
+            <div className="text-center text-sm text-gray-500 py-2">
+              Loading more records...
+            </div>
+          )}
         </div>
       )}
     </div>

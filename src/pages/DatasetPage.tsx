@@ -3,7 +3,7 @@
  * Page for viewing and editing dataset records
  */
 
-import { useParams } from 'react-router-dom'
+import { useParams, useNavigate } from 'react-router-dom'
 import { useMemo, useCallback, useEffect } from 'react'
 import { useDataset } from '../hooks/useDatasets'
 import { useRecords } from '../hooks/useRecords'
@@ -23,6 +23,7 @@ import { showErrorToast, showSuccessToast } from '../components/common/Toast'
  */
 function DatasetPage() {
   const { id } = useParams<{ id: string }>()
+  const navigate = useNavigate()
   const datasetId = id || null
 
   const { dataset, isLoading: isDatasetLoading } = useDataset(datasetId)
@@ -119,7 +120,7 @@ function DatasetPage() {
     )
   }
 
-  if (isDatasetLoading || isRecordsLoading) {
+  if (isDatasetLoading || (isRecordsLoading && records.length === 0)) {
     return (
       <AppShell>
         <Loader size="lg" text="Loading dataset..." />
@@ -131,6 +132,11 @@ function DatasetPage() {
     <AppShell>
       {/* Header */}
       <div className="mb-6">
+        <div className="mb-4">
+          <Button variant="secondary" size="sm" onClick={() => navigate('/dashboard')}>
+            ← Back to Datasets
+          </Button>
+        </div>
         <div className="flex items-center justify-between mb-4">
           <div>
             <h1 className="text-3xl font-bold text-gray-900">

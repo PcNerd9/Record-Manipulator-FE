@@ -199,11 +199,11 @@ class RecordStore {
       this.setState({
         records: recordsWithDirty,
         pagination: {
-          page: response.meta.page,
-          limit: response.meta.limit,
-          total: response.meta.total,
-          totalPages: response.meta.totalPages,
-          hasMore: response.meta.hasNext,
+          page: meta.page,
+          limit: meta.limit,
+          total: meta.total,
+          totalPages: meta.totalPages,
+          hasMore: meta.hasNext,
         },
         isLoading: false,
         error: null,
@@ -436,7 +436,19 @@ class RecordStore {
       const response = await searchRecordsAPI(datasetId, column, value, sortBy)
 
       // Update pagination engine
-      this.paginationEngine.setMeta(response.meta)
+      const normalizedMeta = {
+        page: response.meta.page,
+        limit: (response.meta as any).page_size || response.meta.limit,
+        total: response.meta.total,
+        totalPages: (response.meta as any).total_page || response.meta.totalPages,
+        hasNext: (response.meta as any).has_next_page !== undefined
+          ? (response.meta as any).has_next_page
+          : response.meta.hasNext,
+        hasPrev: (response.meta as any).has_prev_page !== undefined
+          ? (response.meta as any).has_prev_page
+          : response.meta.hasPrev,
+      }
+      this.paginationEngine.setMeta(normalizedMeta)
 
       // Mark records with dirty flag
       const recordsWithDirty = response.records.map((record) => ({
@@ -445,17 +457,14 @@ class RecordStore {
       }))
 
       // Handle both response formats (snake_case and camelCase)
-      const paginationMeta = response.meta as any
       this.setState({
         records: recordsWithDirty,
         pagination: {
-          page: response.meta.page,
-          limit: paginationMeta.page_size || response.meta.limit,
-          total: response.meta.total,
-          totalPages: paginationMeta.total_page || response.meta.totalPages,
-          hasMore: paginationMeta.has_next_page !== undefined 
-            ? paginationMeta.has_next_page 
-            : response.meta.hasNext,
+          page: normalizedMeta.page,
+          limit: normalizedMeta.limit,
+          total: normalizedMeta.total,
+          totalPages: normalizedMeta.totalPages,
+          hasMore: normalizedMeta.hasNext,
         },
         isLoading: false,
         error: null,
