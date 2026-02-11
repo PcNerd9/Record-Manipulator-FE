@@ -57,6 +57,10 @@ export function useDatasets() {
     return datasetStore.deleteDataset(datasetId)
   }, [])
 
+  const renameDataset = useCallback((datasetId: string, name: string) => {
+    return datasetStore.renameDataset(datasetId, name)
+  }, [])
+
   const clearActiveDataset = useCallback(() => {
     datasetStore.clearActiveDataset()
   }, [])
@@ -71,6 +75,7 @@ export function useDatasets() {
     setActiveDataset,
     uploadDataset,
     deleteDataset,
+    renameDataset,
     clearActiveDataset,
     clearError,
   }

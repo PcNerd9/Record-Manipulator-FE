@@ -26,7 +26,7 @@ export function RecordSearch({ datasetId }: RecordSearchProps) {
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    if (!selectedColumn || !searchValue.trim()) {
+    if (!((selectedColumn && searchValue.trim()) ||sortColumn)) {
       return
     }
 
@@ -102,7 +102,13 @@ export function RecordSearch({ datasetId }: RecordSearchProps) {
         <div className="flex items-end gap-2">
           <Button
             type="submit"
-            disabled={!selectedColumn || !searchValue.trim() || isLoading}
+            disabled={
+              isLoading ||
+              !(
+                (selectedColumn && searchValue.trim()) ||
+                sortColumn
+              )
+            }
             isLoading={isLoading}
           >
             Search

@@ -8,6 +8,7 @@ import {
   getDataset as getDatasetAPI,
   uploadDataset as uploadDatasetAPI,
   deleteDataset as deleteDatasetAPI,
+  renameDataset as renameDatasetAPI,
 } from '../api/dataset.api'
 import type {
   Dataset,
@@ -240,6 +241,60 @@ class DatasetStore {
         error && typeof error === 'object' && 'message' in error
           ? (error.message as string)
           : 'Failed to delete dataset'
+
+      this.setState({
+        isLoading: false,
+        error: errorMessage,
+      })
+
+      throw error
+    }
+  }
+
+  /**
+   * Rename dataset
+   */
+  async renameDataset(datasetId: string, name: string): Promise<void> {
+    const trimmedName = name.trim()
+    if (!trimmedName) {
+      throw new Error('Dataset name cannot be empty')
+    }
+
+    this.setState({ isLoading: true, error: null })
+
+    try {
+      const renamedDataset = await renameDatasetAPI(datasetId, trimmedName)
+
+      const datasets = this.state.datasets.map((dataset) =>
+        dataset.id === datasetId
+          ? {
+              ...dataset,
+              name: renamedDataset?.name || trimmedName,
+              updatedAt: renamedDataset?.updatedAt || dataset.updatedAt,
+            }
+          : dataset
+      )
+
+      const activeDataset =
+        this.state.activeDataset?.id === datasetId
+          ? {
+              ...this.state.activeDataset,
+              name: renamedDataset?.name || trimmedName,
+              updatedAt: renamedDataset?.updatedAt || this.state.activeDataset.updatedAt,
+            }
+          : this.state.activeDataset
+
+      this.setState({
+        datasets,
+        activeDataset,
+        isLoading: false,
+        error: null,
+      })
+    } catch (error) {
+      const errorMessage =
+        error && typeof error === 'object' && 'message' in error
+          ? (error.message as string)
+          : 'Failed to rename dataset'
 
       this.setState({
         isLoading: false,

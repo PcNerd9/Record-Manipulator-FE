@@ -278,8 +278,8 @@ class RecordStore {
    * Update a single record
    */
   updateRecord(recordId: string, data: Record<string, unknown>): void {
-    // Mark as dirty
-    this.dirtyEngine.mark(recordId, data)
+    // Merge with existing dirty payload so multiple cell edits per row are preserved.
+    this.dirtyEngine.update(recordId, data)
 
     // Update local state
     const records = this.state.records.map((record) => {
@@ -512,12 +512,18 @@ class RecordStore {
         totalPages: 0,
         hasMore: false,
       },
+      search: {
+        column: null,
+        value: null,
+      },
     })
     this.paginationEngine.reset()
     this.dirtyEngine.clearAll()
     this.currentDatasetId = null
     this.lastFetchedRecordsDatasetId = null
     this.lastRecordsFetchTime = null
+    this.lastSearchKey = null
+    this.lastSearchTime = null
   }
 
   /**

@@ -115,7 +115,12 @@ export async function searchRecords(
 ): Promise<RecordListResponse> {
   const payload: SearchRecordsRequest = { column, value }
 
-  let url = `${API_ENDPOINTS.RECORDS.SEARCH(datasetId)}?key=${payload.column}&value=${payload.value}`
+  let url = `${API_ENDPOINTS.RECORDS.SEARCH(datasetId)}?`
+
+  if (column && value) {
+    url =   `${url}key=${payload.column}&value=${payload.value}`
+  }
+
   if (sortBy) {
     url = `${url}&sort=${sortBy}`
   }

@@ -102,6 +102,18 @@ export async function deleteDataset(id: string): Promise<void> {
 }
 
 /**
+ * Rename a dataset by ID
+ */
+export async function renameDataset(id: string, name: string): Promise<Dataset> {
+  const response = await apiClient.put<ApiResponse<Dataset>>(
+    API_ENDPOINTS.DATASETS.DETAIL(id),
+    { name }
+  )
+
+  return response.data || response
+}
+
+/**
  * Export dataset as CSV or Excel
  * Returns blob for download
  * Uses direct fetch to handle blob response

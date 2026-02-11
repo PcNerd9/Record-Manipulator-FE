@@ -3,7 +3,7 @@
  * React hooks for record management
  */
 
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, useRef } from 'react'
 import { recordStore } from '../state/record.store'
 import type { DatasetRecord } from '../types/record.types'
 
@@ -36,6 +36,7 @@ export function useRecords(datasetId: string | null) {
   const [state, setState] = useState<RecordStoreState>(() =>
     recordStore.getState()
   )
+  const previousDatasetIdRef = useRef<string | null>(null)
 
   useEffect(() => {
     const unsubscribe = recordStore.subscribe(() => {
@@ -50,20 +51,25 @@ export function useRecords(datasetId: string | null) {
   useEffect(() => {
     if (!datasetId) {
       recordStore.clearRecords()
+      previousDatasetIdRef.current = null
       return
     }
 
-    // Only fetch if not already loading and datasetId actually changed
-    // Don't fetch if there's an active search - search will handle fetching
-    // Also check if records are already loaded to prevent unnecessary fetches
+    const previousDatasetId = previousDatasetIdRef.current
     const currentState = recordStore.getState()
+
+    // Dataset changed: force a fresh first-page fetch to avoid showing stale records.
+    if (previousDatasetId !== datasetId) {
+      previousDatasetIdRef.current = datasetId
+      recordStore.fetchRecords(datasetId, 1, false, true).catch(console.error)
+      return
+    }
+
+    // Same dataset: initial load only when empty and not in search mode.
     const hasActiveSearch = currentState.search.column || currentState.search.value
     const hasRecords = currentState.records.length > 0
-    
-    // Only fetch on initial load (no records and no search)
-    // This prevents fetchRecords from overriding search results
     if (!currentState.isLoading && !hasActiveSearch && !hasRecords) {
-      recordStore.fetchRecords(datasetId).catch(console.error)
+      recordStore.fetchRecords(datasetId, 1, false).catch(console.error)
     }
   }, [datasetId])
 
