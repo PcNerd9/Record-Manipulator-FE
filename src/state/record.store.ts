@@ -355,29 +355,25 @@ class RecordStore {
       throw new Error('No active dataset')
     }
 
+    const currentDatasetId = this.currentDatasetId
+    const currentPage = this.state.pagination.page
+
     this.setState({ isLoading: true, error: null })
 
     try {
-      await deleteRecordAPI(this.currentDatasetId, recordId)
-
-      // Remove from local state
-      const records = this.state.records.filter((r) => r.id !== recordId)
+      await deleteRecordAPI(currentDatasetId, recordId)
 
       // Clear dirty flag if exists
       this.dirtyEngine.clear(recordId)
 
-      // Update total count
-      const total = Math.max(0, this.state.pagination.total - 1)
+      // Re-fetch current page to keep frontend state in sync with backend truth.
+      await this.fetchRecords(currentDatasetId, currentPage, false, true)
 
-      this.setState({
-        records,
-        pagination: {
-          ...this.state.pagination,
-          total,
-        },
-        isLoading: false,
-        error: null,
-      })
+      // If current page becomes empty after deletion, load previous page when possible.
+      if (currentPage > 1 && this.state.records.length === 0) {
+        const fallbackPage = Math.max(1, currentPage - 1)
+        await this.fetchRecords(currentDatasetId, fallbackPage, false, true)
+      }
     } catch (error) {
       const errorMessage =
         error && typeof error === 'object' && 'message' in error

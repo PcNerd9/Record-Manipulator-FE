@@ -3,7 +3,7 @@
  * Editable cell with schema-based input types
  */
 
-import { useState, useEffect, useRef, KeyboardEvent } from 'react'
+import { useState, useEffect, useRef, KeyboardEvent, ReactNode } from 'react'
 import { SchemaField } from '../../engines/schema.engine'
 
 export interface EditableCellProps {
@@ -11,6 +11,8 @@ export interface EditableCellProps {
   value: unknown
   onChange: (value: unknown) => void
   isDirty?: boolean
+  className?: string
+  leftOverlay?: ReactNode
 }
 
 /**
@@ -22,6 +24,8 @@ export function EditableCell({
   value,
   onChange,
   isDirty = false,
+  className = '',
+  leftOverlay,
 }: EditableCellProps) {
   const [isEditing, setIsEditing] = useState(false)
   const [editValue, setEditValue] = useState(String(value || ''))
@@ -74,10 +78,11 @@ export function EditableCell({
   if (isEditing) {
     return (
       <td
-        className={`px-6 py-4 whitespace-nowrap text-sm ${
+        className={`relative px-6 py-4 whitespace-nowrap text-sm ${
           isDirty ? 'bg-yellow-50' : 'bg-white'
-        }`}
+        } ${className}`}
       >
+        {leftOverlay}
         <input
           ref={inputRef}
           type={field.inputType}
@@ -93,12 +98,13 @@ export function EditableCell({
 
   return (
     <td
-      className={`px-6 py-4 whitespace-nowrap text-sm text-gray-900 cursor-pointer hover:bg-gray-50 ${
+      className={`relative px-6 py-4 whitespace-nowrap text-sm text-gray-900 cursor-pointer hover:bg-gray-50 ${
         isDirty ? 'bg-yellow-50' : 'bg-white'
-      }`}
+      } ${className}`}
       onClick={() => setIsEditing(true)}
       title={isDirty ? 'Unsaved changes' : 'Click to edit'}
     >
+      {leftOverlay}
       {value !== null && value !== undefined ? String(value) : '-'}
     </td>
   )
