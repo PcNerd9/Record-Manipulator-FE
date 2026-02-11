@@ -19,6 +19,7 @@ export interface Dataset {
   name: string
   data_schema: DatasetSchema
   recordCount?: number
+  columnCount?: number
   createdAt: string
   updatedAt: string
 }
@@ -29,6 +30,8 @@ export interface Dataset {
 export interface DatasetListItem {
   id: string
   name: string
+  recordCount?: number
+  columnCount?: number
   createdAt: string
   updatedAt: string
 }

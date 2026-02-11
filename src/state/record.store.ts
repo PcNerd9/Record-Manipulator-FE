@@ -401,6 +401,7 @@ class RecordStore {
     datasetId: string,
     column: string,
     value: string,
+    sortBy: string | null,
     force: boolean = false
   ): Promise<void> {
     const searchKey = `${datasetId}-${column}-${value}`
@@ -432,7 +433,7 @@ class RecordStore {
     this.paginationEngine.reset()
 
     try {
-      const response = await searchRecordsAPI(datasetId, column, value)
+      const response = await searchRecordsAPI(datasetId, column, value, sortBy)
 
       // Update pagination engine
       this.paginationEngine.setMeta(response.meta)

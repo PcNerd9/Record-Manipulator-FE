@@ -99,9 +99,9 @@ export function useRecords(datasetId: string | null) {
   )
 
   const searchRecords = useCallback(
-    (column: string, value: string) => {
+    (column: string, value: string, sortBy: string | null) => {
       if (!datasetId) return Promise.resolve()
-      return recordStore.searchRecords(datasetId, column, value)
+      return recordStore.searchRecords(datasetId, column, value, sortBy)
     },
     [datasetId]
   )

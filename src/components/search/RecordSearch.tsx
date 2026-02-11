@@ -22,6 +22,7 @@ export function RecordSearch({ datasetId }: RecordSearchProps) {
   const { searchRecords, clearSearch, isLoading } = useRecords(datasetId)
   const [selectedColumn, setSelectedColumn] = useState('')
   const [searchValue, setSearchValue] = useState('')
+  const [sortColumn, setSortColumn] = useState('')
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
@@ -29,12 +30,13 @@ export function RecordSearch({ datasetId }: RecordSearchProps) {
       return
     }
 
-    await searchRecords(selectedColumn, searchValue.trim())
+    await searchRecords(selectedColumn, searchValue.trim(), sortColumn)
   }
 
   const handleClear = () => {
     setSelectedColumn('')
     setSearchValue('')
+    setSortColumn('')
     clearSearch()
   }
 
@@ -76,6 +78,25 @@ export function RecordSearch({ datasetId }: RecordSearchProps) {
             disabled={isLoading}
             fullWidth
           />
+        </div>
+
+        <div className="flex-1">
+          <label className="block text-sm font-medium text-gray-700 mb-1">
+            Sort By
+          </label>
+          <select
+            value={sortColumn}
+            onChange={(e) => setSortColumn(e.target.value)}
+            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            disabled={isLoading}
+          >
+            <option value="">Select column...</option>
+            {columns.map((key) => (
+              <option key={key} value={key}>
+                {key}
+              </option>
+            ))}
+          </select>
         </div>
 
         <div className="flex items-end gap-2">

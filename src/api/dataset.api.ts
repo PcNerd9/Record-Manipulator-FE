@@ -23,6 +23,8 @@ interface RawDatasetListItem {
   name: string
   created_at: string
   updated_at: string
+  column_count: number
+  row_count: number
 }
 
 /**
@@ -45,6 +47,8 @@ export async function getDatasets(): Promise<DatasetListItem[]> {
           return {
             id: dataset.id,
             name: dataset.name,
+            columnCount: dataset.column_count,
+            recordCount: dataset.row_count,
             createdAt: dataset.created_at,
             updatedAt: dataset.updated_at
           }

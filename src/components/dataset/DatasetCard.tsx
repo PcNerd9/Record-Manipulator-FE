@@ -51,12 +51,12 @@ export function DatasetCard({ dataset, onClick }: DatasetCardProps) {
       </h3>
       <div className="flex flex-col space-y-1 text-sm text-gray-500">
         <div className="flex items-center">
-          <span className="font-medium mr-2">Created:</span>
-          <span>{formatDate(dataset.createdAt)}</span>
+          <span className="font-medium mr-2">Last Updated:</span>
+          <span>{formatDate(dataset.updatedAt)}</span>
         </div>
         <div className="flex items-center">
-          <span className="font-medium mr-2">Updated:</span>
-          <span>{formatDate(dataset.updatedAt)}</span>
+          <span className="font-medium mr-2">Columns: {dataset.columnCount ?? 0}</span>
+          <span>Rows: {dataset.recordCount ?? 0}</span>
         </div>
       </div>
     </div>

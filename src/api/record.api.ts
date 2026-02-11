@@ -66,7 +66,7 @@ export async function updateRecords(
   records: RecordUpdatePayload[]
 ): Promise<{ success: boolean; message?: string }> {
   const payload: BatchUpdateRequest = { records }
-
+  console.log(payload)
   const response = await apiClient.put<ApiResponse<{ success: boolean; message?: string }>>(
     API_ENDPOINTS.RECORDS.UPDATE(datasetId),
     payload
@@ -110,11 +110,15 @@ export async function deleteRecord(
 export async function searchRecords(
   datasetId: string,
   column: string,
-  value: string
+  value: string,
+  sortBy: string | null,
 ): Promise<RecordListResponse> {
   const payload: SearchRecordsRequest = { column, value }
 
   let url = `${API_ENDPOINTS.RECORDS.SEARCH(datasetId)}?key=${payload.column}&value=${payload.value}`
+  if (sortBy) {
+    url = `${url}&sort=${sortBy}`
+  }
   const response = await apiClient.get<ApiResponse<RecordListResponse>>(url )
 
   // Normalize response format
