@@ -82,6 +82,7 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
             required
             disabled={isLoading}
             autoComplete="current-password"
+            showPasswordToggle
           />
           <div className="flex justify-end -mt-2">
             <Link

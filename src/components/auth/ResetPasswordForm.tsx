@@ -69,6 +69,7 @@ export function ResetPasswordForm({ onSuccess }: ResetPasswordFormProps) {
             required
             disabled={isLoading}
             autoComplete="new-password"
+            showPasswordToggle
           />
           <Input
             type="password"
@@ -78,6 +79,7 @@ export function ResetPasswordForm({ onSuccess }: ResetPasswordFormProps) {
             required
             disabled={isLoading}
             autoComplete="new-password"
+            showPasswordToggle
           />
 
           {error && (
@@ -99,4 +101,3 @@ export function ResetPasswordForm({ onSuccess }: ResetPasswordFormProps) {
     </div>
   )
 }
-
