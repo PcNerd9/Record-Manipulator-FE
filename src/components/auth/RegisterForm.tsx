@@ -86,7 +86,7 @@ export function RegisterForm({ onSuccess }: RegisterFormProps) {
   }
 
   return (
-    <div className="mx-auto mt-8 max-w-md">
+    <div className="mx-auto w-full max-w-md">
       <div className="surface-card p-7 md:p-8">
         <p className="text-xs font-semibold uppercase tracking-[0.12em] text-slate-500">Create workspace access</p>
         <h2 className="mt-1 mb-6 text-2xl font-semibold text-slate-900">

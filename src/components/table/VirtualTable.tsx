@@ -76,11 +76,12 @@ export function VirtualTable({
             }}
           >
             <tr style={{ height: `${offsetY}px` }} aria-hidden="true">
-              <td colSpan={fields.length} />
+              <td colSpan={fields.length + 1} />
             </tr>
-            {visibleRecords.map((record) => (
+            {visibleRecords.map((record, index) => (
               <TableRow
                 key={record.id}
+                serialNumber={startIndex + index + 1}
                 record={record}
                 fields={fields}
                 onUpdate={onUpdate}

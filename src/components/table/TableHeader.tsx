@@ -17,6 +17,9 @@ export function TableHeader({ fields }: TableHeaderProps) {
   return (
     <thead className="bg-slate-100">
       <tr>
+        <th className="sticky left-0 top-0 z-30 w-20 border-b border-r border-slate-300 bg-slate-100 px-[var(--cell-px)] py-2 text-left text-[11px] font-semibold uppercase tracking-[0.08em] text-slate-600">
+          S/N
+        </th>
         {fields.map((field, index) => (
           <th
             key={field.key}

@@ -23,6 +23,7 @@ export type RecordData = Record<string, unknown>
 export interface DatasetRecord {
   id: string
   data: RecordData
+  serialNumber?: number
   dirty?: boolean
   createdAt?: string
   updatedAt?: string

@@ -157,9 +157,10 @@ export const DataTable = memo(function DataTable({ datasetId }: DataTableProps) 
             <table className="min-w-full border-separate border-spacing-0">
               <TableHeader fields={schemaFields} />
               <tbody className="bg-white">
-                {displayRecords.map((record) => (
+                {displayRecords.map((record, index) => (
                   <TableRow
                     key={record.id}
+                    serialNumber={index + 1}
                     record={record}
                     fields={schemaFields}
                     onUpdate={updateRecord}

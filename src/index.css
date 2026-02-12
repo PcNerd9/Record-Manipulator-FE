@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
 :root {
-  --bg-app: #f3f5f8;
+  --bg-app: #edf2f8;
   --bg-surface: #ffffff;
   --bg-muted: #f8fafc;
   --border: #d9e1ea;
@@ -29,7 +29,26 @@ body,
 
 body {
   margin: 0;
-  background: var(--bg-app);
+  background-color: var(--bg-app);
+  background-image:
+    radial-gradient(circle at 8% 10%, rgba(37, 99, 235, 0.10), transparent 38%),
+    radial-gradient(circle at 88% 6%, rgba(14, 116, 144, 0.08), transparent 34%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.72), rgba(248, 250, 252, 0.95)),
+    repeating-linear-gradient(
+      0deg,
+      rgba(148, 163, 184, 0.07) 0,
+      rgba(148, 163, 184, 0.07) 1px,
+      transparent 1px,
+      transparent 30px
+    ),
+    repeating-linear-gradient(
+      90deg,
+      rgba(148, 163, 184, 0.05) 0,
+      rgba(148, 163, 184, 0.05) 1px,
+      transparent 1px,
+      transparent 30px
+    );
+  background-attachment: fixed;
   color: var(--text-primary);
   font-family: "IBM Plex Sans", "Segoe UI", -apple-system, BlinkMacSystemFont, sans-serif;
   text-rendering: optimizeLegibility;

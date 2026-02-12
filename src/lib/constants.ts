@@ -41,7 +41,7 @@ export const API_ENDPOINTS = {
  * Autosave configuration
  */
 export const AUTOSAVE = {
-  DELAY_MS: 60000, // 60 seconds
+  DELAY_MS: 3000, // 60 seconds
   BATCH_SIZE: 50, // Maximum records per batch
 } as const
 

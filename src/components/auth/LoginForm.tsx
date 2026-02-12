@@ -55,7 +55,7 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
   const displayError = localError || error
 
   return (
-    <div className="mx-auto mt-10 max-w-md">
+    <div className="mx-auto w-full max-w-md">
       <div className="surface-card p-7 md:p-8">
         <p className="text-xs font-semibold uppercase tracking-[0.12em] text-slate-500">Welcome back</p>
         <h2 className="mt-1 mb-6 text-2xl font-semibold text-slate-900">

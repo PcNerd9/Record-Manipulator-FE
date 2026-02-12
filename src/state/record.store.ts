@@ -57,6 +57,8 @@ class RecordStore {
   private dirtyEngine: DirtyEngine = new DirtyEngine()
   private paginationEngine: PaginationEngine = new PaginationEngine()
   private currentDatasetId: string | null = null
+  private serialNumberMap: Map<string, number> = new Map()
+  private nextSerialNumber: number = 1
 
   private listeners: Set<() => void> = new Set()
   private isFetchingRecords = false
@@ -111,6 +113,22 @@ class RecordStore {
   private setState(updates: Partial<RecordStoreState>): void {
     this.state = { ...this.state, ...updates }
     this.notify()
+  }
+
+  /**
+   * Get or assign a stable serial number for a record ID
+   */
+  private getOrAssignSerialNumber(recordId: string): number {
+    const key = String(recordId)
+    const existing = this.serialNumberMap.get(key)
+    if (existing !== undefined) {
+      return existing
+    }
+
+    const serialNumber = this.nextSerialNumber
+    this.serialNumberMap.set(key, serialNumber)
+    this.nextSerialNumber += 1
+    return serialNumber
   }
 
   /**
@@ -193,6 +211,7 @@ class RecordStore {
       // Mark records with dirty flag from dirty engine
       const recordsWithDirty = records.map((record) => ({
         ...record,
+        serialNumber: this.getOrAssignSerialNumber(record.id),
         dirty: this.dirtyEngine.isDirty(record.id),
       }))
 
@@ -241,7 +260,11 @@ class RecordStore {
 
       // Add to local state at the beginning
       const records = [
-        { ...newRecord, dirty: false },
+        {
+          ...newRecord,
+          serialNumber: this.getOrAssignSerialNumber(newRecord.id),
+          dirty: false,
+        },
         ...this.state.records,
       ]
 
@@ -449,6 +472,7 @@ class RecordStore {
       // Mark records with dirty flag
       const recordsWithDirty = response.records.map((record) => ({
         ...record,
+        serialNumber: this.getOrAssignSerialNumber(record.id),
         dirty: this.dirtyEngine.isDirty(record.id),
       }))
 
@@ -519,6 +543,8 @@ class RecordStore {
     })
     this.paginationEngine.reset()
     this.dirtyEngine.clearAll()
+    this.serialNumberMap.clear()
+    this.nextSerialNumber = 1
     this.currentDatasetId = null
     this.lastFetchedRecordsDatasetId = null
     this.lastRecordsFetchTime = null

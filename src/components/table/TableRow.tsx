@@ -9,6 +9,7 @@ import { SchemaField } from '../../engines/schema.engine'
 import { EditableCell } from './EditableCell'
 
 export interface TableRowProps {
+  serialNumber: number
   record: DatasetRecord
   fields: SchemaField[]
   onUpdate: (recordId: string, data: Record<string, unknown>) => void
@@ -21,6 +22,7 @@ export interface TableRowProps {
  * Renders a single table row with editable cells
  */
 export const TableRow = memo(function TableRow({
+  serialNumber,
   record,
   fields,
   onUpdate,
@@ -37,6 +39,9 @@ export const TableRow = memo(function TableRow({
 
   return (
     <tr className="group even:bg-slate-50/30 hover:bg-blue-50/30">
+      <td className="sticky left-0 z-20 h-[var(--row-h)] whitespace-nowrap border-b border-r border-slate-200 bg-white px-[var(--cell-px)] py-1 text-xs font-semibold text-slate-500 group-even:bg-slate-50/30 group-hover:bg-blue-50/30">
+        {serialNumber}
+      </td>
       {fields.map((field, index) => (
         <EditableCell
           key={field.key}
