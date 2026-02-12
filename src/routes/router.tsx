@@ -14,6 +14,9 @@ import { RouteErrorElement } from '../components/common/RouteErrorElement'
 const LoginPage = lazy(() => import('../pages/LoginPage'))
 const RegisterPage = lazy(() => import('../pages/RegisterPage'))
 const VerifyEmailPage = lazy(() => import('../pages/VerifyEmailPage'))
+const ForgotPasswordPage = lazy(() => import('../pages/ForgotPasswordPage'))
+const VerifyForgotPasswordPage = lazy(() => import('../pages/VerifyForgotPasswordPage'))
+const ResetPasswordPage = lazy(() => import('../pages/ResetPasswordPage'))
 const DashboardPage = lazy(() => import('../pages/DashboardPage'))
 const UploadPage = lazy(() => import('../pages/UploadPage'))
 const DatasetPage = lazy(() => import('../pages/DatasetPage'))
@@ -122,6 +125,39 @@ export const router = createBrowserRouter([
       <PublicRoute>
         <Suspense fallback={<Loader size="lg" text="Loading..." />}>
           <VerifyEmailPage />
+        </Suspense>
+      </PublicRoute>
+    ),
+    errorElement: <RouteErrorElement />,
+  },
+  {
+    path: '/forgot-password',
+    element: (
+      <PublicRoute>
+        <Suspense fallback={<Loader size="lg" text="Loading..." />}>
+          <ForgotPasswordPage />
+        </Suspense>
+      </PublicRoute>
+    ),
+    errorElement: <RouteErrorElement />,
+  },
+  {
+    path: '/verify-forgot-password',
+    element: (
+      <PublicRoute>
+        <Suspense fallback={<Loader size="lg" text="Loading..." />}>
+          <VerifyForgotPasswordPage />
+        </Suspense>
+      </PublicRoute>
+    ),
+    errorElement: <RouteErrorElement />,
+  },
+  {
+    path: '/reset-password',
+    element: (
+      <PublicRoute>
+        <Suspense fallback={<Loader size="lg" text="Loading..." />}>
+          <ResetPasswordPage />
         </Suspense>
       </PublicRoute>
     ),

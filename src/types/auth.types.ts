@@ -90,6 +90,39 @@ export interface ResendOTPResponse {
   success: boolean
 }
 
+export interface ForgotPasswordRequest {
+  email: string
+}
+
+export interface ForgotPasswordResponse {
+  message: string
+  success?: boolean
+}
+
+export interface VerifyForgotPasswordRequest {
+  email: string
+  otp: string
+}
+
+export interface VerifyForgotPasswordResponse {
+  status_code?: number
+  status?: string
+  message: string
+  data?: {
+    access_token?: string
+  }
+  success?: boolean
+}
+
+export interface ResetPasswordRequest {
+  password: string
+}
+
+export interface ResetPasswordResponse {
+  message: string
+  success?: boolean
+}
+
 /**
  * Auth actions
  */

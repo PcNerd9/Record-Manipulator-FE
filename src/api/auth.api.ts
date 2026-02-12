@@ -14,6 +14,12 @@ import type {
   VerifyOTPResponse,
   ResendOTPRequest,
   ResendOTPResponse,
+  ForgotPasswordRequest,
+  ForgotPasswordResponse,
+  VerifyForgotPasswordRequest,
+  VerifyForgotPasswordResponse,
+  ResetPasswordRequest,
+  ResetPasswordResponse,
   User,
 } from '../types/auth.types'
 import type { ApiResponse } from '../types/api.types'
@@ -157,6 +163,81 @@ export async function resendOTP(email: string): Promise<ResendOTPResponse> {
     API_ENDPOINTS.AUTH.RESEND_OTP,
     payload,
     { skipAuth: true } // Resend OTP doesn't require authentication
+  )
+
+  return response.data || response
+}
+
+/**
+ * Forgot password
+ * Sends reset OTP to user's email
+ */
+export async function forgotPassword(email: string): Promise<ForgotPasswordResponse> {
+  const payload: ForgotPasswordRequest = { email }
+
+  const response = await apiClient.post<ApiResponse<ForgotPasswordResponse>>(
+    API_ENDPOINTS.AUTH.FORGOT_PASSWORD,
+    payload,
+    { skipAuth: true }
+  )
+
+  return response.data || response
+}
+
+/**
+ * Verify forgot password OTP
+ * Returns reset access token in response.data.access_token
+ */
+export async function verifyForgotPassword(
+  email: string,
+  otp: string
+): Promise<VerifyForgotPasswordResponse> {
+  const payload: VerifyForgotPasswordRequest = { email, otp }
+
+  const rawResponse = await apiClient.post<unknown>(
+    API_ENDPOINTS.AUTH.VERIFY_FORGOT_PASSWORD,
+    payload,
+    { skipAuth: true }
+  )
+
+  const response = rawResponse as
+    | ApiResponse<VerifyForgotPasswordResponse>
+    | VerifyForgotPasswordResponse
+
+  const wrappedData =
+    response && typeof response === 'object' && 'data' in response
+      ? (response as ApiResponse<VerifyForgotPasswordResponse>).data
+      : undefined
+
+  const result: VerifyForgotPasswordResponse =
+    wrappedData && typeof wrappedData === 'object' && 'data' in wrappedData
+      ? (wrappedData as VerifyForgotPasswordResponse)
+      : (response as VerifyForgotPasswordResponse)
+
+  const accessToken =
+    result?.data?.access_token ||
+    (wrappedData &&
+    typeof wrappedData === 'object' &&
+    'access_token' in wrappedData
+      ? (wrappedData as { access_token?: string }).access_token
+      : undefined)
+
+  if (accessToken) {
+    apiClient.setAccessToken(accessToken)
+  }
+
+  return result
+}
+
+/**
+ * Reset password using temporary access token
+ */
+export async function resetPassword(password: string): Promise<ResetPasswordResponse> {
+  const payload: ResetPasswordRequest = { password }
+
+  const response = await apiClient.put<ApiResponse<ResetPasswordResponse>>(
+    API_ENDPOINTS.AUTH.RESET_PASSWORD,
+    payload
   )
 
   return response.data || response

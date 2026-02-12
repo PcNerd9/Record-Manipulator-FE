@@ -16,6 +16,9 @@ export const API_ENDPOINTS = {
     REGISTER: '/api/v1/auth/register',
     VERIFY_EMAIL: '/api/v1/auth/verify-email',
     RESEND_OTP: '/api/v1/auth/resend-otp',
+    FORGOT_PASSWORD: '/api/v1/auth/forgot-password',
+    VERIFY_FORGOT_PASSWORD: '/api/v1/auth/verify-forgot-password',
+    RESET_PASSWORD: '/api/v1/auth/reset-password',
   },
   // Dataset endpoints
   DATASETS: {

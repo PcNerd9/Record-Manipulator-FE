@@ -83,6 +83,14 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
             disabled={isLoading}
             autoComplete="current-password"
           />
+          <div className="flex justify-end -mt-2">
+            <Link
+              to="/forgot-password"
+              className="text-xs font-semibold text-blue-700 hover:text-blue-800"
+            >
+              Forgot password?
+            </Link>
+          </div>
 
           {displayError && !localError && (
             <div className="rounded-md border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700" role="alert">
