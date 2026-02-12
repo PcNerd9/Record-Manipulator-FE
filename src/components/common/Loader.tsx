@@ -24,14 +24,14 @@ export function Loader({ size = 'md', className = '', text }: LoaderProps) {
   return (
     <div className={`flex flex-col items-center justify-center ${className}`}>
       <svg
-        className={`animate-spin ${spinnerSize} text-blue-600`}
+        className={`animate-spin ${spinnerSize} text-blue-700`}
         xmlns="http://www.w3.org/2000/svg"
         fill="none"
         viewBox="0 0 24 24"
         aria-label="Loading"
       >
         <circle
-          className="opacity-25"
+          className="opacity-20"
           cx="12"
           cy="12"
           r="10"
@@ -45,7 +45,7 @@ export function Loader({ size = 'md', className = '', text }: LoaderProps) {
         />
       </svg>
       {text && (
-        <p className="mt-2 text-sm text-gray-600" aria-live="polite">
+        <p className="mt-2 text-sm text-slate-600" aria-live="polite">
           {text}
         </p>
       )}
@@ -60,7 +60,7 @@ export function Loader({ size = 'md', className = '', text }: LoaderProps) {
 export function InlineLoader({ className = '' }: { className?: string }) {
   return (
     <svg
-      className={`animate-spin h-4 w-4 text-gray-400 ${className}`}
+      className={`animate-spin h-4 w-4 text-slate-500 ${className}`}
       xmlns="http://www.w3.org/2000/svg"
       fill="none"
       viewBox="0 0 24 24"

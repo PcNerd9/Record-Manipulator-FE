@@ -18,9 +18,9 @@ export interface ModalProps {
 }
 
 const sizeStyles: Record<ModalSize, string> = {
-  sm: 'max-w-md',
-  md: 'max-w-lg',
-  lg: 'max-w-2xl',
+  sm: 'max-w-[420px]',
+  md: 'max-w-[560px]',
+  lg: 'max-w-[760px]',
   xl: 'max-w-4xl',
   full: 'max-w-full mx-4',
 }
@@ -76,7 +76,7 @@ export function Modal({
     >
       {/* Overlay */}
       <div
-        className="fixed inset-0 bg-black bg-opacity-50 transition-opacity"
+        className="fixed inset-0 bg-slate-900/45 backdrop-blur-[1px] transition-opacity"
         onClick={closeOnOverlayClick ? onClose : undefined}
         aria-hidden="true"
       />
@@ -84,16 +84,16 @@ export function Modal({
       {/* Modal Container */}
       <div className="flex min-h-full items-center justify-center p-4">
         <div
-          className={`relative bg-white rounded-lg shadow-xl ${sizeStyle} w-full`}
+          className={`relative w-full overflow-hidden rounded-xl border border-slate-200 bg-white shadow-2xl ${sizeStyle}`}
           onClick={(e) => e.stopPropagation()}
         >
           {/* Header */}
           {(title || showCloseButton) && (
-            <div className="flex items-center justify-between p-6 border-b border-gray-200">
+            <div className="flex items-center justify-between border-b border-slate-200 bg-slate-50 px-5 py-4">
               {title && (
                 <h3
                   id="modal-title"
-                  className="text-lg font-semibold text-gray-900"
+                  className="text-base font-semibold text-slate-900"
                 >
                   {title}
                 </h3>
@@ -101,7 +101,7 @@ export function Modal({
               {showCloseButton && (
                 <button
                   onClick={onClose}
-                  className="text-gray-400 hover:text-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 rounded-md p-1"
+                  className="rounded-md p-1 text-slate-400 transition-colors hover:bg-slate-100 hover:text-slate-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
                   aria-label="Close modal"
                 >
                   <svg
@@ -123,7 +123,7 @@ export function Modal({
           )}
 
           {/* Content */}
-          <div className="p-6">{children}</div>
+          <div className="p-5">{children}</div>
         </div>
       </div>
     </div>

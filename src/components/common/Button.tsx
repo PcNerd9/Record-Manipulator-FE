@@ -5,7 +5,7 @@
 
 import { ButtonHTMLAttributes, forwardRef } from 'react'
 
-export type ButtonVariant = 'primary' | 'secondary' | 'danger' | 'outline'
+export type ButtonVariant = 'primary' | 'secondary' | 'danger' | 'outline' | 'ghost'
 export type ButtonSize = 'sm' | 'md' | 'lg'
 
 export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
@@ -17,19 +17,21 @@ export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 
 const variantStyles: Record<ButtonVariant, string> = {
   primary:
-    'bg-blue-600 text-white hover:bg-blue-700 focus:ring-blue-500 disabled:bg-blue-300',
+    'bg-blue-700 text-white border border-blue-700 hover:bg-blue-800 hover:border-blue-800 focus:ring-blue-500 disabled:bg-blue-300 disabled:border-blue-300',
   secondary:
-    'bg-gray-200 text-gray-900 hover:bg-gray-300 focus:ring-gray-500 disabled:bg-gray-100',
+    'bg-slate-100 text-slate-800 border border-slate-300 hover:bg-slate-200 hover:border-slate-400 focus:ring-slate-500 disabled:bg-slate-100 disabled:text-slate-400 disabled:border-slate-200',
   danger:
-    'bg-red-600 text-white hover:bg-red-700 focus:ring-red-500 disabled:bg-red-300',
+    'bg-red-700 text-white border border-red-700 hover:bg-red-800 hover:border-red-800 focus:ring-red-500 disabled:bg-red-300 disabled:border-red-300',
   outline:
-    'border-2 border-gray-300 text-gray-700 hover:bg-gray-50 focus:ring-gray-500 disabled:border-gray-200 disabled:text-gray-400',
+    'bg-white border border-slate-300 text-slate-700 hover:bg-slate-50 hover:border-slate-400 focus:ring-slate-500 disabled:border-slate-200 disabled:text-slate-400',
+  ghost:
+    'bg-transparent border border-transparent text-slate-700 hover:bg-slate-100 focus:ring-slate-500 disabled:text-slate-400',
 }
 
 const sizeStyles: Record<ButtonSize, string> = {
-  sm: 'px-3 py-1.5 text-sm',
-  md: 'px-4 py-2 text-base',
-  lg: 'px-6 py-3 text-lg',
+  sm: 'h-8 px-3 text-sm',
+  md: 'h-9 px-4 text-sm',
+  lg: 'h-11 px-5 text-base',
 }
 
 export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
@@ -47,7 +49,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
     ref
   ) => {
     const baseStyles =
-      'inline-flex items-center justify-center font-medium rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 transition-colors duration-200 disabled:cursor-not-allowed'
+      'inline-flex items-center justify-center gap-2 font-medium rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-white transition-colors duration-150 disabled:cursor-not-allowed whitespace-nowrap'
 
     const variantStyle = variantStyles[variant]
     const sizeStyle = sizeStyles[size]
@@ -63,7 +65,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       >
         {isLoading && (
           <svg
-            className="animate-spin -ml-1 mr-2 h-4 w-4"
+            className="animate-spin h-4 w-4"
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
             viewBox="0 0 24 24"
