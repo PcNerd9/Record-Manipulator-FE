@@ -27,18 +27,18 @@ export function EmptyState({
 }: EmptyStateProps) {
   return (
     <div
-      className={`flex flex-col items-center justify-center py-12 px-4 text-center ${className}`}
+      className={`surface-card flex flex-col items-center justify-center px-4 py-12 text-center ${className}`}
     >
       {icon && (
-        <div className="mb-4 text-gray-400" aria-hidden="true">
+        <div className="mb-4 text-slate-400" aria-hidden="true">
           {icon}
         </div>
       )}
 
-      <h3 className="text-lg font-medium text-gray-900 mb-2">{title}</h3>
+      <h3 className="mb-2 text-lg font-semibold text-slate-900">{title}</h3>
 
       {message && (
-        <p className="text-sm text-gray-500 max-w-sm mb-6">{message}</p>
+        <p className="mb-6 max-w-sm text-sm text-slate-600">{message}</p>
       )}
 
       {action && (

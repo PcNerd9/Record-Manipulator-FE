@@ -84,14 +84,15 @@ export function UploadDataset({ onSuccess, onCancel }: UploadDatasetProps) {
 
   return (
     <div className="max-w-2xl mx-auto">
-      <div className="bg-white rounded-lg shadow-md p-6">
-        <h2 className="text-xl font-bold text-gray-900 mb-4">
+      <div className="surface-card p-6">
+        <h2 className="mb-1 text-xl font-semibold text-slate-900">
           Upload Dataset
         </h2>
+        <p className="mb-5 text-sm text-slate-600">Select a CSV or Excel file to create a new editable dataset.</p>
 
         <div className="space-y-4">
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+          <div className="surface-muted p-4">
+            <label className="mb-2 block text-sm font-medium text-slate-700">
               Select File (CSV or Excel)
             </label>
             <input
@@ -100,23 +101,23 @@ export function UploadDataset({ onSuccess, onCancel }: UploadDatasetProps) {
               accept=".csv,.xls,.xlsx,text/csv,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
               onChange={handleFileSelect}
               disabled={isUploading}
-              className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
+              className="block w-full rounded-md border border-slate-200 bg-white p-2 text-sm text-slate-600 file:mr-3 file:rounded-md file:border file:border-slate-200 file:bg-slate-50 file:px-3 file:py-1.5 file:text-sm file:font-semibold file:text-slate-700 hover:file:bg-slate-100"
             />
             {selectedFile && (
-              <p className="mt-2 text-sm text-gray-600">
+              <p className="mt-2 text-sm text-slate-600">
                 Selected: <span className="font-medium">{selectedFile.name}</span>
               </p>
             )}
           </div>
 
           {displayError && (
-            <div className="bg-red-50 border border-red-200 rounded-md p-3">
+            <div className="rounded-md border border-red-200 bg-red-50 p-3">
               <p className="text-sm text-red-800">{displayError}</p>
             </div>
           )}
 
           {isUploading && (
-            <div className="bg-blue-50 border border-blue-200 rounded-md p-4">
+            <div className="rounded-md border border-blue-200 bg-blue-50 p-4">
               <Loader text="Dataset is being processed, please wait..." />
             </div>
           )}

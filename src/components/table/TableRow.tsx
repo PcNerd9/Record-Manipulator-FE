@@ -36,7 +36,7 @@ export const TableRow = memo(function TableRow({
   }, [record.id, onDelete])
 
   return (
-    <tr className="group hover:bg-gray-50">
+    <tr className="group even:bg-slate-50/30 hover:bg-blue-50/30">
       {fields.map((field, index) => (
         <EditableCell
           key={field.key}
@@ -53,7 +53,7 @@ export const TableRow = memo(function TableRow({
                 handleDelete()
               }}
               disabled={isDeleting}
-              className="absolute left-3 top-1/2 -translate-y-1/2 z-10 inline-flex h-6 w-6 items-center justify-center rounded-md border border-red-200 bg-white text-red-600 opacity-0 pointer-events-none transition-opacity duration-150 hover:bg-red-50 focus:opacity-100 focus:pointer-events-auto focus:outline-none focus:ring-2 focus:ring-red-500 disabled:cursor-not-allowed disabled:opacity-40 group-hover:opacity-100 group-hover:pointer-events-auto group-focus-within:opacity-100 group-focus-within:pointer-events-auto"
+              className="absolute left-3 top-1/2 z-10 inline-flex h-6 w-6 -translate-y-1/2 items-center justify-center rounded-md border border-red-200 bg-white text-red-700 opacity-100 pointer-events-auto transition-opacity duration-150 hover:bg-red-50 focus:pointer-events-auto focus:opacity-100 focus:outline-none focus:ring-2 focus:ring-red-500 disabled:cursor-not-allowed disabled:opacity-40 md:opacity-0 md:pointer-events-none md:group-hover:pointer-events-auto md:group-hover:opacity-100 md:group-focus-within:pointer-events-auto md:group-focus-within:opacity-100"
               aria-label="Delete row"
               title="Delete row"
             >

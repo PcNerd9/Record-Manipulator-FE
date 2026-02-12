@@ -15,12 +15,12 @@ export interface TableHeaderProps {
  */
 export function TableHeader({ fields }: TableHeaderProps) {
   return (
-    <thead className="bg-gray-50">
+    <thead className="bg-slate-100">
       <tr>
         {fields.map((field, index) => (
           <th
             key={field.key}
-            className={`sticky top-0 z-20 bg-gray-50 px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-200 ${
+            className={`sticky top-0 z-20 border-b border-r border-slate-300 bg-slate-100 px-[var(--cell-px)] py-2 text-left text-[11px] font-semibold uppercase tracking-[0.08em] text-slate-600 ${
               index === 0 ? 'pl-12' : ''
             }`}
           >

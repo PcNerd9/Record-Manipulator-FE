@@ -47,16 +47,16 @@ export function RecordSearch({ datasetId }: RecordSearchProps) {
   }
 
   return (
-    <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 mb-4">
-      <form onSubmit={handleSubmit} className="flex flex-col md:flex-row gap-4">
-        <div className="flex-1">
-          <label className="block text-sm font-medium text-gray-700 mb-1">
+    <div className="mb-4 rounded-lg border border-slate-200 bg-white p-4 shadow-sm">
+      <form onSubmit={handleSubmit} className="grid grid-cols-1 gap-3 md:grid-cols-2 xl:grid-cols-4">
+        <div className="min-w-0">
+          <label className="mb-1 block text-xs font-semibold uppercase tracking-[0.08em] text-slate-500">
             Column
           </label>
           <select
             value={selectedColumn}
             onChange={(e) => setSelectedColumn(e.target.value)}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="h-9 w-full rounded-md border border-slate-300 bg-white px-3 text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
             disabled={isLoading}
           >
             <option value="">Select column...</option>
@@ -68,7 +68,7 @@ export function RecordSearch({ datasetId }: RecordSearchProps) {
           </select>
         </div>
 
-        <div className="flex-1">
+        <div className="min-w-0">
           <Input
             type="text"
             label="Value"
@@ -80,14 +80,14 @@ export function RecordSearch({ datasetId }: RecordSearchProps) {
           />
         </div>
 
-        <div className="flex-1">
-          <label className="block text-sm font-medium text-gray-700 mb-1">
+        <div className="min-w-0">
+          <label className="mb-1 block text-xs font-semibold uppercase tracking-[0.08em] text-slate-500">
             Sort By
           </label>
           <select
             value={sortColumn}
             onChange={(e) => setSortColumn(e.target.value)}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="h-9 w-full rounded-md border border-slate-300 bg-white px-3 text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
             disabled={isLoading}
           >
             <option value="">Select column...</option>
@@ -99,7 +99,7 @@ export function RecordSearch({ datasetId }: RecordSearchProps) {
           </select>
         </div>
 
-        <div className="flex items-end gap-2">
+        <div className="flex items-end gap-2 md:col-span-2 xl:col-span-1 xl:justify-end">
           <Button
             type="submit"
             disabled={
@@ -110,6 +110,7 @@ export function RecordSearch({ datasetId }: RecordSearchProps) {
               )
             }
             isLoading={isLoading}
+            className="flex-1 xl:flex-none"
           >
             Search
           </Button>
@@ -118,6 +119,7 @@ export function RecordSearch({ datasetId }: RecordSearchProps) {
             variant="secondary"
             onClick={handleClear}
             disabled={isLoading}
+            className="flex-1 xl:flex-none"
           >
             Clear
           </Button>

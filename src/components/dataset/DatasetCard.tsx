@@ -72,8 +72,8 @@ export function DatasetCard({ dataset, onClick, onRename, onDelete }: DatasetCar
   return (
     <div
       onClick={handleClick}
-      className={`relative bg-white rounded-lg shadow-sm border border-gray-200 p-6 hover:shadow-md transition-shadow cursor-pointer ${
-        onClick ? 'hover:border-blue-300' : ''
+      className={`group relative cursor-pointer rounded-xl border border-slate-200 bg-white p-5 shadow-sm transition-all ${
+        onClick ? 'hover:-translate-y-0.5 hover:border-blue-300 hover:shadow-md' : ''
       }`}
       role={onClick ? 'button' : undefined}
       tabIndex={onClick ? 0 : undefined}
@@ -92,7 +92,7 @@ export function DatasetCard({ dataset, onClick, onRename, onDelete }: DatasetCar
             setIsMenuOpen((prev) => !prev)
           }}
           onKeyDown={(e) => e.stopPropagation()}
-          className="h-8 w-8 inline-flex items-center justify-center rounded-md border border-gray-200 text-gray-500 bg-white hover:bg-gray-50 hover:text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="inline-flex h-8 w-8 items-center justify-center rounded-md border border-slate-200 bg-white text-slate-500 transition-colors hover:bg-slate-50 hover:text-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
           aria-label="More options"
           aria-haspopup="menu"
           aria-expanded={isMenuOpen}
@@ -104,13 +104,13 @@ export function DatasetCard({ dataset, onClick, onRename, onDelete }: DatasetCar
 
         {isMenuOpen && (
           <div
-            className="absolute right-0 mt-2 w-36 bg-white rounded-md shadow-lg border border-gray-200 z-20 py-1"
+            className="absolute right-0 z-20 mt-2 w-36 overflow-hidden rounded-lg border border-slate-200 bg-white py-1 shadow-xl"
             role="menu"
             onClick={(e) => e.stopPropagation()}
           >
             <button
               type="button"
-              className="w-full text-left px-3 py-2 text-sm text-gray-700 hover:bg-gray-100"
+              className="w-full px-3 py-2 text-left text-sm text-slate-700 hover:bg-slate-100"
               role="menuitem"
               onClick={(e) => {
                 e.stopPropagation()
@@ -122,7 +122,7 @@ export function DatasetCard({ dataset, onClick, onRename, onDelete }: DatasetCar
             </button>
             <button
               type="button"
-              className="w-full text-left px-3 py-2 text-sm text-red-600 hover:bg-red-50"
+              className="w-full px-3 py-2 text-left text-sm text-red-700 hover:bg-red-50"
               role="menuitem"
               onClick={(e) => {
                 e.stopPropagation()
@@ -136,16 +136,16 @@ export function DatasetCard({ dataset, onClick, onRename, onDelete }: DatasetCar
         )}
       </div>
 
-      <h3 className="text-lg font-semibold text-gray-900 mb-2">
+      <h3 className="mb-3 pr-8 text-lg font-semibold text-slate-900">
         {dataset.name}
       </h3>
-      <div className="flex flex-col space-y-1 text-sm text-gray-500">
+      <div className="space-y-2 text-sm text-slate-600">
         <div className="flex items-center">
-          <span className="font-medium mr-2">Last Updated:</span>
+          <span className="mr-2 min-w-[92px] text-xs font-semibold uppercase tracking-wide text-slate-500">Updated</span>
           <span>{formatDate(dataset.updatedAt)}</span>
         </div>
-        <div className="flex items-center">
-          <span className="font-medium mr-2">Columns: {dataset.columnCount ?? 0}</span>
+        <div className="flex items-center justify-between rounded-md border border-slate-200 bg-slate-50 px-2.5 py-1.5 text-xs font-semibold uppercase tracking-wide text-slate-600">
+          <span>Columns: {dataset.columnCount ?? 0}</span>
           <span>Rows: {dataset.recordCount ?? 0}</span>
         </div>
       </div>

@@ -130,31 +130,33 @@ export const DataTable = memo(function DataTable({ datasetId }: DataTableProps) 
 
   return (
     <div className="space-y-4">
-      <div className="flex justify-end">
+      <div className="flex flex-col gap-2 rounded-lg border border-slate-200 bg-white px-3 py-2 shadow-sm sm:flex-row sm:items-center sm:justify-between">
+        <p className="text-xs font-semibold uppercase tracking-[0.1em] text-slate-500">Records Grid</p>
         <Button
-          variant="primary"
+          variant="secondary"
           size="sm"
           onClick={handleAddNewRow}
           disabled={isLoading || isUpdating}
           isLoading={isLoading}
+          className="w-full sm:w-auto"
         >
-          + Add New Row
+          + Add Row
         </Button>
       </div>
 
       {displayRecords.length === 0 ? (
-        <div className="bg-gray-50 border border-gray-200 rounded-md p-8 text-center">
-          <p className="text-gray-500">No records found</p>
+        <div className="rounded-lg border border-slate-200 bg-slate-50 p-8 text-center">
+          <p className="text-slate-500">No records found</p>
         </div>
       ) : (
         <div className="space-y-3">
           <div
             ref={containerRef}
-            className="max-h-[70vh] overflow-auto rounded-lg border border-gray-200"
+            className="max-h-[68vh] overflow-auto rounded-lg border border-slate-300 bg-white shadow-sm md:max-h-[70vh]"
           >
-            <table className="min-w-full divide-y divide-gray-200">
+            <table className="min-w-full border-separate border-spacing-0">
               <TableHeader fields={schemaFields} />
-              <tbody className="bg-white divide-y divide-gray-200">
+              <tbody className="bg-white">
                 {displayRecords.map((record) => (
                   <TableRow
                     key={record.id}
@@ -169,7 +171,7 @@ export const DataTable = memo(function DataTable({ datasetId }: DataTableProps) 
             </table>
           </div>
           {isLoading && pagination.page > 1 && (
-            <div className="text-center text-sm text-gray-500 py-2">
+            <div className="py-2 text-center text-sm text-slate-500">
               Loading more records...
             </div>
           )}

@@ -86,10 +86,11 @@ export function RegisterForm({ onSuccess }: RegisterFormProps) {
   }
 
   return (
-    <div className="max-w-md mx-auto mt-8">
-      <div className="bg-white rounded-lg shadow-md p-8">
-        <h2 className="text-2xl font-bold text-gray-900 mb-6 text-center">
-          Create Account
+    <div className="mx-auto mt-8 max-w-md">
+      <div className="surface-card p-7 md:p-8">
+        <p className="text-xs font-semibold uppercase tracking-[0.12em] text-slate-500">Create workspace access</p>
+        <h2 className="mt-1 mb-6 text-2xl font-semibold text-slate-900">
+          Create your account
         </h2>
 
         <form onSubmit={handleSubmit} className="space-y-4">
@@ -147,7 +148,7 @@ export function RegisterForm({ onSuccess }: RegisterFormProps) {
           />
 
           {error && (
-            <div className="text-sm text-red-600" role="alert">
+            <div className="rounded-md border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700" role="alert">
               {error}
             </div>
           )}
@@ -161,11 +162,11 @@ export function RegisterForm({ onSuccess }: RegisterFormProps) {
             {isLoading ? 'Creating Account...' : 'Sign Up'}
           </Button>
 
-          <div className="text-center text-sm text-gray-600 mt-4">
+          <div className="mt-4 text-center text-sm text-slate-600">
             Already have an account?{' '}
             <Link
               to="/login"
-              className="text-blue-600 hover:text-blue-800 font-medium"
+              className="font-semibold text-blue-700 hover:text-blue-800"
             >
               Login
             </Link>

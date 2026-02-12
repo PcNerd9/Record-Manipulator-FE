@@ -78,8 +78,8 @@ export function EditableCell({
   if (isEditing) {
     return (
       <td
-        className={`relative px-6 py-4 whitespace-nowrap text-sm ${
-          isDirty ? 'bg-yellow-50' : 'bg-white'
+        className={`relative h-[var(--row-h)] whitespace-nowrap border-b border-r border-slate-200 px-[var(--cell-px)] py-1 text-sm ${
+          isDirty ? 'bg-amber-50' : 'bg-white'
         } ${className}`}
       >
         {leftOverlay}
@@ -90,7 +90,7 @@ export function EditableCell({
           onChange={(e) => setEditValue(e.target.value)}
           onBlur={handleBlur}
           onKeyDown={handleKeyDown}
-          className="w-full px-2 py-1 border border-blue-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="h-8 w-full rounded border border-blue-400 bg-white px-2 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
       </td>
     )
@@ -98,14 +98,16 @@ export function EditableCell({
 
   return (
     <td
-      className={`relative px-6 py-4 whitespace-nowrap text-sm text-gray-900 cursor-pointer hover:bg-gray-50 ${
-        isDirty ? 'bg-yellow-50' : 'bg-white'
+      className={`relative h-[var(--row-h)] cursor-pointer whitespace-nowrap border-b border-r border-slate-200 px-[var(--cell-px)] py-1 text-sm text-slate-800 hover:bg-blue-50/40 ${
+        isDirty ? 'bg-amber-50' : 'bg-white'
       } ${className}`}
       onClick={() => setIsEditing(true)}
       title={isDirty ? 'Unsaved changes' : 'Click to edit'}
     >
       {leftOverlay}
-      {value !== null && value !== undefined ? String(value) : '-'}
+      <span className="font-mono text-[13px]">
+        {value !== null && value !== undefined ? String(value) : '-'}
+      </span>
     </td>
   )
 }

@@ -55,10 +55,11 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
   const displayError = localError || error
 
   return (
-    <div className="max-w-md mx-auto mt-8">
-      <div className="bg-white rounded-lg shadow-md p-8">
-        <h2 className="text-2xl font-bold text-gray-900 mb-6 text-center">
-          Login
+    <div className="mx-auto mt-10 max-w-md">
+      <div className="surface-card p-7 md:p-8">
+        <p className="text-xs font-semibold uppercase tracking-[0.12em] text-slate-500">Welcome back</p>
+        <h2 className="mt-1 mb-6 text-2xl font-semibold text-slate-900">
+          Sign in to your workspace
         </h2>
 
         <form onSubmit={handleSubmit} className="space-y-4">
@@ -84,7 +85,7 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
           />
 
           {displayError && !localError && (
-            <div className="text-sm text-red-600" role="alert">
+            <div className="rounded-md border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700" role="alert">
               {displayError}
             </div>
           )}
@@ -98,11 +99,11 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
             {isLoading ? 'Logging in...' : 'Login'}
           </Button>
 
-          <div className="text-center text-sm text-gray-600 mt-4">
+          <div className="mt-4 text-center text-sm text-slate-600">
             Don't have an account?{' '}
             <Link
               to="/register"
-              className="text-blue-600 hover:text-blue-800 font-medium"
+              className="font-semibold text-blue-700 hover:text-blue-800"
             >
               Sign up
             </Link>

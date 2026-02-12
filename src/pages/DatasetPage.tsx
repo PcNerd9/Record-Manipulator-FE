@@ -137,10 +137,10 @@ function DatasetPage() {
             ← Back to Datasets
           </Button>
         </div>
-        <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-          <div>
+        <div className="flex flex-col gap-4 xl:flex-row xl:items-center xl:justify-between">
+          <div className="min-w-0">
             <p className="text-xs font-semibold uppercase tracking-[0.12em] text-slate-500">Dataset Editor</p>
-            <h1 className="mt-1 text-2xl font-semibold text-slate-900 md:text-3xl">
+            <h1 className="mt-1 break-words text-2xl font-semibold text-slate-900 md:text-3xl" title={dataset?.name || 'Dataset'}>
               {dataset?.name || 'Dataset'}
             </h1>
             {dataset && (
@@ -150,9 +150,9 @@ function DatasetPage() {
             )}
           </div>
 
-          <div className="flex flex-wrap items-center gap-2.5">
+          <div className="flex w-full flex-wrap items-center gap-2.5 xl:w-auto xl:justify-end">
             {/* Autosave Status */}
-            <div className="rounded-md border border-slate-200 bg-slate-50 px-2.5 py-1 text-sm">
+            <div className="w-full rounded-md border border-slate-200 bg-slate-50 px-2.5 py-1 text-sm sm:w-auto">
               <span className={autosaveStatusColor}>
                 {autosaveStatusText}
               </span>
@@ -165,6 +165,7 @@ function DatasetPage() {
               onClick={handleManualSave}
               disabled={autosaveStatus === 'saving' || dirtyCount === 0}
               isLoading={autosaveStatus === 'saving'}
+              className="w-full sm:w-auto"
             >
               {autosaveStatus === 'saving' ? 'Saving...' : 'Save Changes'}
             </Button>
@@ -175,6 +176,7 @@ function DatasetPage() {
               size="sm"
               onClick={handleExportCSV}
               disabled={records.length === 0}
+              className="w-full sm:w-auto"
             >
               Export CSV
             </Button>
@@ -183,6 +185,7 @@ function DatasetPage() {
               size="sm"
               onClick={handleExportExcel}
               disabled={records.length === 0}
+              className="w-full sm:w-auto"
             >
               Export Excel
             </Button>
