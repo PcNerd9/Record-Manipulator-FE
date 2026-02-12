@@ -71,14 +71,17 @@ export class APIClient {
    * Normalize API errors
    */
   private normalizeError(error: unknown, status: number): ApiError {
-    error = error?.detail;
+    const detailedError =
+      error && typeof error === 'object' && 'detail' in error
+        ? (error as { detail?: unknown }).detail
+        : error
 
-    if (error && typeof error === 'object' && 'message' in error) {
+    if (detailedError && typeof detailedError === 'object' && 'message' in detailedError) {
       return {
         status,
-        message: (error as { message: string }).message,
-        errors: (error as { errors?: Record<string, string[]> }).errors,
-        code: (error as { code?: string }).code,
+        message: (detailedError as { message: string }).message,
+        errors: (detailedError as { errors?: Record<string, string[]> }).errors,
+        code: (detailedError as { code?: string }).code,
       }
     }
 

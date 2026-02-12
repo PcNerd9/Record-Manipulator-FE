@@ -8,6 +8,7 @@
  */
 function getEnv(key: string, defaultValue?: string): string {
   const value = import.meta.env[key]
+
   if (value === undefined) {
     if (defaultValue !== undefined) {
       return defaultValue
