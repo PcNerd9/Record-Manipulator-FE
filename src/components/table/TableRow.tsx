@@ -42,37 +42,36 @@ export const TableRow = memo(function TableRow({
       <td className="sticky left-0 z-20 h-[var(--row-h)] whitespace-nowrap border-b border-r border-slate-200 bg-white px-[var(--cell-px)] py-1 text-xs font-semibold text-slate-500 group-even:bg-slate-50/30 group-hover:bg-blue-50/30">
         {serialNumber}
       </td>
-      {fields.map((field, index) => (
+      {fields.map((field) => (
         <EditableCell
           key={field.key}
           field={field}
           value={record.data[field.key]}
           onChange={(value) => handleCellChange(field.key, value)}
           isDirty={record.dirty}
-          className={index === 0 ? 'pl-12' : ''}
-          leftOverlay={index === 0 ? (
-            <button
-              type="button"
-              onClick={(e) => {
-                e.stopPropagation()
-                handleDelete()
-              }}
-              disabled={isDeleting}
-              className="absolute left-3 top-1/2 z-10 inline-flex h-6 w-6 -translate-y-1/2 items-center justify-center rounded-md border border-red-200 bg-white text-red-700 opacity-100 pointer-events-auto transition-opacity duration-150 hover:bg-red-50 focus:pointer-events-auto focus:opacity-100 focus:outline-none focus:ring-2 focus:ring-red-500 disabled:cursor-not-allowed disabled:opacity-40 md:opacity-0 md:pointer-events-none md:group-hover:pointer-events-auto md:group-hover:opacity-100 md:group-focus-within:pointer-events-auto md:group-focus-within:opacity-100"
-              aria-label="Delete row"
-              title="Delete row"
-            >
-              <svg className="h-3.5 w-3.5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                <path
-                  fillRule="evenodd"
-                  d="M8.5 2a1 1 0 00-1 1V4H5a1 1 0 000 2h.2l.7 9.2A2 2 0 007.9 17h4.2a2 2 0 001.99-1.8l.7-9.2H15a1 1 0 100-2h-2.5V3a1 1 0 00-1-1h-3zm2 2V3h-1v1h1zM8 8a1 1 0 112 0v5a1 1 0 11-2 0V8zm4-1a1 1 0 00-1 1v5a1 1 0 102 0V8a1 1 0 00-1-1z"
-                  clipRule="evenodd"
-                />
-              </svg>
-            </button>
-          ) : undefined}
         />
       ))}
+      <td className="sticky right-0 z-20 h-[var(--row-h)] border-b border-l border-slate-200 bg-white/95 px-2 py-1 text-center backdrop-blur-sm group-even:bg-slate-50/95 group-hover:bg-blue-50/95">
+        <button
+          type="button"
+          onClick={(e) => {
+            e.stopPropagation()
+            handleDelete()
+          }}
+          disabled={isDeleting}
+          className="inline-flex h-7 w-7 items-center justify-center rounded-md border border-red-200 bg-white text-red-700 transition-colors hover:bg-red-50 focus:outline-none focus:ring-2 focus:ring-red-500 disabled:cursor-not-allowed disabled:opacity-40"
+          aria-label="Delete row"
+          title="Delete row"
+        >
+          <svg className="h-3.5 w-3.5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+            <path
+              fillRule="evenodd"
+              d="M8.5 2a1 1 0 00-1 1V4H5a1 1 0 000 2h.2l.7 9.2A2 2 0 007.9 17h4.2a2 2 0 001.99-1.8l.7-9.2H15a1 1 0 100-2h-2.5V3a1 1 0 00-1-1h-3zm2 2V3h-1v1h1zM8 8a1 1 0 112 0v5a1 1 0 11-2 0V8zm4-1a1 1 0 00-1 1v5a1 1 0 102 0V8a1 1 0 00-1-1z"
+              clipRule="evenodd"
+            />
+          </svg>
+        </button>
+      </td>
     </tr>
   )
 })

@@ -76,7 +76,7 @@ export function VirtualTable({
             }}
           >
             <tr style={{ height: `${offsetY}px` }} aria-hidden="true">
-              <td colSpan={fields.length + 1} />
+              <td colSpan={fields.length + 2} />
             </tr>
             {visibleRecords.map((record, index) => (
               <TableRow
