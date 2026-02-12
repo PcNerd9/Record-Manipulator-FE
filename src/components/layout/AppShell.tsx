@@ -17,13 +17,13 @@ export interface AppShellProps {
  */
 export function AppShell({ children, showNavbar = true }: AppShellProps) {
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col">
+    <div className="min-h-screen flex flex-col bg-[var(--bg-app)]">
       {showNavbar && <Navbar />}
-      <main className="flex-1">
-        <div className="container mx-auto px-4 py-8">{children}</div>
+      <main className="flex-1 px-4 py-6 md:px-6 md:py-8">
+        <div className="mx-auto w-full max-w-[1400px]">{children}</div>
       </main>
-      <footer className="bg-white border-t border-gray-200 py-4">
-        <div className="container mx-auto px-4 text-center text-sm text-gray-500">
+      <footer className="border-t border-slate-200 bg-white/75 backdrop-blur-sm">
+        <div className="mx-auto w-full max-w-[1400px] px-4 py-3 text-center text-xs font-medium tracking-wide text-slate-500 md:px-6">
           Dataset Manipulator Platform
         </div>
       </footer>

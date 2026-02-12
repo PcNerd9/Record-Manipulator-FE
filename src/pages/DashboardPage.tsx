@@ -25,10 +25,14 @@ function DashboardPage() {
 
   return (
     <AppShell>
-      <div className="mb-6 flex items-center justify-between">
-        <h1 className="text-3xl font-bold text-gray-900">My Datasets</h1>
+      <div className="surface-card mb-6 flex flex-col gap-4 p-5 md:flex-row md:items-center md:justify-between">
+        <div>
+          <p className="text-xs font-semibold uppercase tracking-[0.12em] text-slate-500">Workspace</p>
+          <h1 className="mt-1 text-2xl font-semibold text-slate-900 md:text-3xl">My Datasets</h1>
+          <p className="mt-1 text-sm text-slate-600">Manage uploads, edits, and exports from one place.</p>
+        </div>
         <Button onClick={handleUploadClick} variant="primary">
-          Upload New Dataset
+          Upload Dataset
         </Button>
       </div>
 

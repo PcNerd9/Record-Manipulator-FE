@@ -131,27 +131,28 @@ function DatasetPage() {
   return (
     <AppShell>
       {/* Header */}
-      <div className="mb-6">
-        <div className="mb-4">
+      <div className="surface-card mb-5 p-5">
+        <div className="mb-3">
           <Button variant="secondary" size="sm" onClick={() => navigate('/dashboard')}>
             ← Back to Datasets
           </Button>
         </div>
-        <div className="flex items-center justify-between mb-4">
+        <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
           <div>
-            <h1 className="text-3xl font-bold text-gray-900">
+            <p className="text-xs font-semibold uppercase tracking-[0.12em] text-slate-500">Dataset Editor</p>
+            <h1 className="mt-1 text-2xl font-semibold text-slate-900 md:text-3xl">
               {dataset?.name || 'Dataset'}
             </h1>
             {dataset && (
-              <p className="text-sm text-gray-500 mt-1">
+              <p className="mt-1 text-sm text-slate-600">
                 {records.length} record{records.length !== 1 ? 's' : ''}
               </p>
             )}
           </div>
 
-          <div className="flex items-center gap-3">
+          <div className="flex flex-wrap items-center gap-2.5">
             {/* Autosave Status */}
-            <div className="text-sm">
+            <div className="rounded-md border border-slate-200 bg-slate-50 px-2.5 py-1 text-sm">
               <span className={autosaveStatusColor}>
                 {autosaveStatusText}
               </span>

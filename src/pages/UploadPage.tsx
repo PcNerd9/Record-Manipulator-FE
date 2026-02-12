@@ -37,10 +37,10 @@ function UploadPage() {
   if (isProcessing) {
     return (
       <AppShell>
-        <div className="max-w-2xl mx-auto mt-8">
-          <div className="bg-white rounded-lg shadow-md p-8 text-center">
+        <div className="mx-auto mt-8 max-w-2xl">
+          <div className="surface-card p-8 text-center">
             <Loader size="lg" text="Dataset is being processed, please wait..." />
-            <p className="mt-4 text-sm text-gray-500">
+            <p className="mt-4 text-sm text-slate-500">
               This may take a few moments depending on the file size.
             </p>
           </div>
@@ -51,7 +51,7 @@ function UploadPage() {
 
   return (
     <AppShell>
-      <div className="mb-6">
+      <div className="mb-4">
         <Button
           variant="secondary"
           onClick={handleCancel}
@@ -59,6 +59,12 @@ function UploadPage() {
         >
           ← Back to Dashboard
         </Button>
+      </div>
+
+      <div className="surface-card mb-6 p-5">
+        <p className="text-xs font-semibold uppercase tracking-[0.12em] text-slate-500">Import</p>
+        <h1 className="mt-1 text-2xl font-semibold text-slate-900">Upload Dataset</h1>
+        <p className="mt-1 text-sm text-slate-600">Upload CSV or Excel files and start editing immediately.</p>
       </div>
 
       <UploadDataset

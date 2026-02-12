@@ -33,15 +33,15 @@ export function Sidebar({
 
   return (
     <aside
-      className="w-64 bg-white border-r border-gray-200 h-full flex flex-col"
+      className="flex h-full w-64 flex-col border-r border-slate-200 bg-white"
       aria-label="Sidebar navigation"
     >
       {onClose && (
-        <div className="flex items-center justify-between p-4 border-b border-gray-200">
-          <h2 className="text-lg font-semibold text-gray-900">Navigation</h2>
+        <div className="flex items-center justify-between border-b border-slate-200 px-4 py-3">
+          <h2 className="text-base font-semibold text-slate-900">Navigation</h2>
           <button
             onClick={onClose}
-            className="text-gray-400 hover:text-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 rounded-md p-1"
+            className="rounded-md p-1 text-slate-400 hover:bg-slate-100 hover:text-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
             aria-label="Close sidebar"
           >
             <svg
@@ -68,10 +68,10 @@ export function Sidebar({
               <li key={index}>
                 <a
                   href={item.href}
-                  className={`flex items-center space-x-3 px-3 py-2 rounded-md text-sm font-medium transition-colors ${
+                  className={`flex items-center space-x-3 rounded-md px-3 py-2 text-sm font-medium transition-colors ${
                     item.active
-                      ? 'bg-blue-50 text-blue-700'
-                      : 'text-gray-700 hover:bg-gray-100'
+                      ? 'border border-blue-200 bg-blue-50 text-blue-800'
+                      : 'text-slate-700 hover:bg-slate-100'
                   }`}
                 >
                   {item.icon && <span className="flex-shrink-0">{item.icon}</span>}
@@ -83,7 +83,7 @@ export function Sidebar({
         </nav>
       )}
 
-      {children && <div className="p-4 border-t border-gray-200">{children}</div>}
+      {children && <div className="border-t border-slate-200 p-4">{children}</div>}
     </aside>
   )
 }
