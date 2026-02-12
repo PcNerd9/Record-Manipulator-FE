@@ -6,7 +6,7 @@
 import { memo, useState, useCallback } from 'react'
 import { useRecords } from '../../hooks/useRecords'
 import { useSchema } from '../../hooks/useSchema'
-import { useInfiniteScrollWindow } from '../../hooks/useInfiniteScroll'
+import { useInfiniteScroll } from '../../hooks/useInfiniteScroll'
 import { TableHeader } from './TableHeader'
 import { TableRow } from './TableRow'
 import { Loader } from '../common/Loader'
@@ -80,7 +80,7 @@ export const DataTable = memo(function DataTable({ datasetId }: DataTableProps) 
     fetchRecords,
   ])
 
-  useInfiniteScrollWindow({
+  const { containerRef } = useInfiniteScroll({
     onLoadMore: handleLoadMore,
     enabled: !!datasetId && !isSchemaLoading && records.length > 0 && pagination.hasMore,
     threshold: 250,
@@ -148,8 +148,11 @@ export const DataTable = memo(function DataTable({ datasetId }: DataTableProps) 
         </div>
       ) : (
         <div className="space-y-3">
-          <div className="overflow-x-auto">
-            <table className="min-w-full divide-y divide-gray-200 border border-gray-200 rounded-lg">
+          <div
+            ref={containerRef}
+            className="max-h-[70vh] overflow-auto rounded-lg border border-gray-200"
+          >
+            <table className="min-w-full divide-y divide-gray-200">
               <TableHeader fields={schemaFields} />
               <tbody className="bg-white divide-y divide-gray-200">
                 {displayRecords.map((record) => (

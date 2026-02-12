@@ -42,7 +42,7 @@ export function useInfiniteScroll({
   threshold = 200,
   paginationEngine,
 }: UseInfiniteScrollOptions) {
-  const containerRef = useRef<HTMLElement | null>(null)
+  const containerRef = useRef<HTMLDivElement | null>(null)
   const isLoadingRef = useRef(false)
 
   const handleScroll = useCallback(() => {

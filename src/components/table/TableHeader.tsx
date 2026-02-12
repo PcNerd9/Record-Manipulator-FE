@@ -20,7 +20,7 @@ export function TableHeader({ fields }: TableHeaderProps) {
         {fields.map((field, index) => (
           <th
             key={field.key}
-            className={`px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-200 ${
+            className={`sticky top-0 z-20 bg-gray-50 px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-200 ${
               index === 0 ? 'pl-12' : ''
             }`}
           >
